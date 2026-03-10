@@ -1,5 +1,5 @@
 # context.md
-Last Updated: 2026-03-10 — Initial source repo with single-card view feature
+Last Updated: 2026-03-10 — Added ESLint, PropTypes, and scaffold cleanup
 
 ## Current State
 
@@ -34,6 +34,13 @@ Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Pr
 - `hooks/useLocalStorage.js` — State persistence hook
 - `values.js` — 83 personal values data
 
+## Linting
+
+- **ESLint 9** with flat config (`eslint.config.js`) — React, React Hooks, React Refresh plugins
+- **PropTypes** on all components (prop-types package)
+- `npm run lint` / `npm run lint:fix` scripts available
+- Currently passing with zero warnings
+
 ## Open Work
 
 - [ ] CI/CD: GitHub Action to build and deploy to pezant-tools on push
@@ -47,4 +54,4 @@ Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Pr
 
 ## Active Branch
 
-`main`
+`agent/lint-types`

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { ArrowRight, Layers, LayoutGrid, CreditCard } from 'lucide-react';
 import { ALL_VALUES } from '../values';
 import { SingleCardView } from './SingleCardView';
@@ -9,7 +10,7 @@ export function SortingPhase({ state, save }) {
   const [viewMode, setViewMode] = useState(() => {
     try {
       return localStorage.getItem('vs-view-mode') || 'card';
-    } catch {
+    } catch { /* localStorage may be unavailable */
       return 'card';
     }
   });
@@ -74,7 +75,7 @@ export function SortingPhase({ state, save }) {
     setViewMode(next);
     try {
       localStorage.setItem('vs-view-mode', next);
-    } catch {}
+    } catch { /* localStorage may be unavailable */ }
     // Reset filter when switching back to card view
     if (next === 'card') setFilter('remaining');
   };
@@ -186,3 +187,19 @@ export function SortingPhase({ state, save }) {
     </div>
   );
 }
+
+const valuePropType = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+});
+
+SortingPhase.propTypes = {
+  state: PropTypes.shape({
+    phase: PropTypes.number,
+    veryImportant: PropTypes.arrayOf(valuePropType).isRequired,
+    important: PropTypes.arrayOf(valuePropType).isRequired,
+    notImportant: PropTypes.arrayOf(valuePropType).isRequired,
+  }).isRequired,
+  save: PropTypes.func.isRequired,
+};

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { AnimatePresence } from 'framer-motion';
 import { ValueCard } from './ValueCard';
 
@@ -44,3 +45,28 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
     </>
   );
 }
+
+const valuePropType = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+});
+
+GridView.propTypes = {
+  unsortedValues: PropTypes.arrayOf(valuePropType).isRequired,
+  sortedValues: PropTypes.shape({
+    veryImportant: PropTypes.arrayOf(valuePropType),
+    important: PropTypes.arrayOf(valuePropType),
+    notImportant: PropTypes.arrayOf(valuePropType),
+  }).isRequired,
+  filter: PropTypes.string.isRequired,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      dotColor: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  onSort: PropTypes.func.isRequired,
+  onUnsort: PropTypes.func.isRequired,
+};
