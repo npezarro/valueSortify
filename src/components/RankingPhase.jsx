@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Reorder } from 'framer-motion';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import { DraggableCard } from './DraggableCard';
@@ -23,11 +24,10 @@ function RankingGroup({ title, color, values, onReorder }) {
         onReorder={onReorder}
         className="space-y-2"
       >
-        {values.map((value, index) => (
+        {values.map((value) => (
           <DraggableCard
             key={value.id}
             value={value}
-            index={index}
             colorDot={color}
           />
         ))}
@@ -79,3 +79,25 @@ export function RankingPhase({ state, save }) {
     </div>
   );
 }
+
+const valuePropType = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+});
+
+RankingGroup.propTypes = {
+  title: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  values: PropTypes.arrayOf(valuePropType).isRequired,
+  onReorder: PropTypes.func.isRequired,
+};
+
+RankingPhase.propTypes = {
+  state: PropTypes.shape({
+    veryImportant: PropTypes.arrayOf(valuePropType).isRequired,
+    important: PropTypes.arrayOf(valuePropType).isRequired,
+    notImportant: PropTypes.arrayOf(valuePropType).isRequired,
+  }).isRequired,
+  save: PropTypes.func.isRequired,
+};

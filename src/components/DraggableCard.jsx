@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Reorder, useDragControls } from 'framer-motion';
 import { GripVertical } from 'lucide-react';
 
@@ -40,3 +41,12 @@ export function DraggableCard({ value, colorDot }) {
     </Reorder.Item>
   );
 }
+
+DraggableCard.propTypes = {
+  value: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  }).isRequired,
+  colorDot: PropTypes.string,
+};
