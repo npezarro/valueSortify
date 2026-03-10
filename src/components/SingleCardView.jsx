@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const exitVariants = {
@@ -8,15 +9,9 @@ const exitVariants = {
 };
 
 export function SingleCardView({ unsortedValues, onSort }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState(null);
 
-  // Keep index in bounds when values change
-  useEffect(() => {
-    if (currentIndex >= unsortedValues.length && unsortedValues.length > 0) {
-      setCurrentIndex(unsortedValues.length - 1);
-    }
-  }, [unsortedValues.length, currentIndex]);
+  const currentIndex = 0;
 
   const currentValue = unsortedValues[currentIndex];
 
@@ -169,3 +164,14 @@ export function SingleCardView({ unsortedValues, onSort }) {
     </div>
   );
 }
+
+SingleCardView.propTypes = {
+  unsortedValues: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  onSort: PropTypes.func.isRequired,
+};

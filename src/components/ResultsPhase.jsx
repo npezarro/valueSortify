@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
 
 function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) {
@@ -190,3 +191,28 @@ export function ResultsPhase({ state, save, reset }) {
     </div>
   );
 }
+
+const valuePropType = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+});
+
+ResultGroup.propTypes = {
+  title: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  borderColor: PropTypes.string.isRequired,
+  bgColor: PropTypes.string.isRequired,
+  textColor: PropTypes.string.isRequired,
+  values: PropTypes.arrayOf(valuePropType).isRequired,
+};
+
+ResultsPhase.propTypes = {
+  state: PropTypes.shape({
+    veryImportant: PropTypes.arrayOf(valuePropType).isRequired,
+    important: PropTypes.arrayOf(valuePropType).isRequired,
+    notImportant: PropTypes.arrayOf(valuePropType).isRequired,
+  }).isRequired,
+  save: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+};

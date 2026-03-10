@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
 export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
@@ -48,3 +49,14 @@ export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
     </motion.div>
   );
 }
+
+ValueCard.propTypes = {
+  value: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  }).isRequired,
+  onSort: PropTypes.func,
+  showButtons: PropTypes.bool,
+  colorDot: PropTypes.string,
+};
