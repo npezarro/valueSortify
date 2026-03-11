@@ -1,12 +1,12 @@
 # context.md
-Last Updated: 2026-03-10 — Added ESLint, PropTypes, and scaffold cleanup
+Last Updated: 2026-03-11 — Added reset button and cross-category card movement
 
 ## Current State
 
-- **What works**: All three phases functional — sorting, ranking (drag reorder), results with PDF/CSV/JSON export
+- **What works**: All three phases functional. Sorting, ranking (drag reorder + cross-category moves), results with PDF/CSV/JSON export. Reset/Start Over available in all phases with confirmation dialog.
 - **What's deployed**: Built assets copied to `/var/www/pezant-tools/Example Projects/ValueSortify/` and served via pezant-tools PM2 process
 - **Live URL**: https://pezant.ca/tools/ValueSortify/
-- **Key feature**: Single-card view (default) with Q/W/E hotkeys for fast sorting, grid view toggle available
+- **Key features**: Single-card view (default) with Q/W/E hotkeys for fast sorting, grid view toggle, cross-category card movement via colored dot buttons in ranking phase
 
 ## Architecture
 
@@ -44,7 +44,6 @@ Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Pr
 ## Open Work
 
 - [ ] CI/CD: GitHub Action to build and deploy to pezant-tools on push
-- [ ] Drag-and-drop in Phase 1 grid view (deferred — single-card view solves the UX better)
 
 ## Environment Notes
 
@@ -54,4 +53,4 @@ Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Pr
 
 ## Active Branch
 
-`agent/lint-types`
+`claude/reset-and-move-cards`
