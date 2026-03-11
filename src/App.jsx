@@ -111,8 +111,8 @@ export default function App() {
         </div>
 
         {/* Phase content */}
-        {phase === 1 && <SortingPhase state={state} save={save} />}
-        {phase === 2 && <RankingPhase state={state} save={save} />}
+        {phase === 1 && <SortingPhase state={state} save={save} reset={reset} />}
+        {phase === 2 && <RankingPhase state={state} save={save} reset={reset} />}
         {phase === 3 && <ResultsPhase state={state} save={save} reset={reset} />}
       </main>
     </div>
