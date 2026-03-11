@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ArrowRight, Layers, LayoutGrid, CreditCard } from 'lucide-react';
+import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw } from 'lucide-react';
 import { ALL_VALUES } from '../values';
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
 
-export function SortingPhase({ state, save }) {
+export function SortingPhase({ state, save, reset }) {
   const [filter, setFilter] = useState('remaining');
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [viewMode, setViewMode] = useState(() => {
     try {
       return localStorage.getItem('vs-view-mode') || 'card';
@@ -21,6 +22,7 @@ export function SortingPhase({ state, save }) {
     ...state.notImportant.map((v) => v.id),
   ]);
   const remaining = ALL_VALUES.filter((v) => !sortedIds.has(v.id));
+  const sortedCount = sortedIds.size;
 
   const handleSort = (valueId, category) => {
     const value = ALL_VALUES.find((v) => v.id === valueId);
@@ -82,8 +84,20 @@ export function SortingPhase({ state, save }) {
 
   return (
     <div>
-      {/* View toggle */}
-      <div className="flex justify-end mb-4">
+      {/* View toggle + reset */}
+      <div className="flex justify-between mb-4">
+        {sortedCount > 0 ? (
+          <button
+            onClick={() => setShowResetConfirm(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors"
+            title="Start over"
+          >
+            <RotateCcw size={14} />
+            Start Over
+          </button>
+        ) : (
+          <div />
+        )}
         <button
           onClick={toggleView}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
@@ -184,6 +198,32 @@ export function SortingPhase({ state, save }) {
           <ArrowRight size={16} />
         </button>
       </div>
+
+      {/* Reset confirmation modal */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
+            <p className="text-sm text-gray-600 mb-6">
+              You&apos;ve categorized {sortedCount} value{sortedCount !== 1 ? 's' : ''}. This will clear all your progress and start from scratch.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowResetConfirm(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { reset(); setShowResetConfirm(false); }}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -202,4 +242,5 @@ SortingPhase.propTypes = {
     notImportant: PropTypes.arrayOf(valuePropType).isRequired,
   }).isRequired,
   save: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
 };
