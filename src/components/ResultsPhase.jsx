@@ -8,7 +8,7 @@ function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) 
   return (
     <div className={`border rounded-lg p-4 md:p-6 ${borderColor} ${bgColor}`}>
       <h3 className={`text-lg font-semibold mb-4 flex items-center gap-2 ${textColor}`}>
-        <div className={`w-4 h-4 ${color} rounded`} />
+        <div className={`w-4 h-4 ${color} rounded`} aria-hidden="true" />
         {title}
         <span className="text-sm font-normal opacity-70">({values.length})</span>
       </h3>
@@ -157,28 +157,33 @@ export function ResultsPhase({ state, save, reset }) {
           <div className="relative">
             <button
               onClick={() => setShowExport(!showExport)}
+              aria-expanded={showExport}
+              aria-haspopup="true"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm bg-gray-900 text-white hover:bg-gray-800 shadow-md transition-colors"
             >
-              <Download size={16} />
+              <Download size={16} aria-hidden="true" />
               Export
-              <ChevronDown size={14} />
+              <ChevronDown size={14} aria-hidden="true" />
             </button>
             {showExport && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1">
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1" role="menu" aria-label="Export options">
                 <button
                   onClick={() => { exportCSV(); setShowExport(false); }}
+                  role="menuitem"
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   Export as CSV
                 </button>
                 <button
                   onClick={() => { exportPDF(); setShowExport(false); }}
+                  role="menuitem"
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   Export as PDF
                 </button>
                 <button
                   onClick={() => { exportJSON(); setShowExport(false); }}
+                  role="menuitem"
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   Export as JSON

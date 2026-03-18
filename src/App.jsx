@@ -54,7 +54,7 @@ export default function App() {
                 Phase {phase} of 3
                 {phase === 1 && ` — ${sortedCount}/${ALL_VALUES.length} sorted`}
               </span>
-              <div className="bg-gray-200 rounded-full h-2 w-32">
+              <div className="bg-gray-200 rounded-full h-2 w-32" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
                 <div
                   className="bg-gray-900 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
@@ -70,22 +70,22 @@ export default function App() {
         {/* Phase instructions */}
         <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
           <div className="flex items-start gap-3">
-            <info.Icon className="text-gray-900 shrink-0 mt-0.5" size={20} />
+            <info.Icon className="text-gray-900 shrink-0 mt-0.5" size={20} aria-hidden="true" />
             <div>
               <h2 className="text-lg font-semibold mb-1">{info.title}</h2>
               <p className="text-sm text-gray-500">{info.description}</p>
               {phase === 1 && (
                 <div className="flex flex-wrap gap-4 mt-3 text-xs">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-green-500 rounded" />
+                    <div className="w-3 h-3 bg-green-500 rounded" aria-hidden="true" />
                     <span>Core values that define who you are</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-blue-500 rounded" />
+                    <div className="w-3 h-3 bg-blue-500 rounded" aria-hidden="true" />
                     <span>Values that matter but aren&apos;t central</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-gray-400 rounded" />
+                    <div className="w-3 h-3 bg-gray-400 rounded" aria-hidden="true" />
                     <span>Values that don&apos;t resonate with you</span>
                   </div>
                 </div>
@@ -101,7 +101,7 @@ export default function App() {
               Phase {phase}/3
               {phase === 1 && ` — ${sortedCount}/${ALL_VALUES.length}`}
             </span>
-            <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+            <div className="flex-1 bg-gray-200 rounded-full h-1.5" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
               <div
                 className="bg-gray-900 h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
@@ -111,9 +111,11 @@ export default function App() {
         </div>
 
         {/* Phase content */}
-        {phase === 1 && <SortingPhase state={state} save={save} reset={reset} />}
-        {phase === 2 && <RankingPhase state={state} save={save} reset={reset} />}
-        {phase === 3 && <ResultsPhase state={state} save={save} reset={reset} />}
+        <div aria-live="polite">
+          {phase === 1 && <SortingPhase state={state} save={save} reset={reset} />}
+          {phase === 2 && <RankingPhase state={state} save={save} reset={reset} />}
+          {phase === 3 && <ResultsPhase state={state} save={save} reset={reset} />}
+        </div>
       </main>
     </div>
   );

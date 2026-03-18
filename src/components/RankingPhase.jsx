@@ -18,7 +18,7 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <div className={`w-4 h-4 ${color} rounded`} />
+        <div className={`w-4 h-4 ${color} rounded`} aria-hidden="true" />
         <h3 className="text-base md:text-lg font-medium text-gray-900">
           {title}
         </h3>
@@ -32,6 +32,8 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
         values={values}
         onReorder={onReorder}
         className="space-y-2"
+        role="list"
+        aria-label={`${title} values, drag to reorder`}
       >
         <AnimatePresence>
           {values.map((value) => (
@@ -113,9 +115,9 @@ export function RankingPhase({ state, save, reset }) {
 
       {/* Reset confirmation modal */}
       {showResetConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="ranking-reset-title">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
+            <h3 id="ranking-reset-title" className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
             <p className="text-sm text-gray-600 mb-6">
               You&apos;ve ranked {totalRanked} values across 3 categories. This will clear all your progress and start from scratch.
             </p>
