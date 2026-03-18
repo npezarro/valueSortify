@@ -26,13 +26,22 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
     >
       <div className="flex items-start gap-2">
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Drag to reorder ${value.name}`}
           onPointerDown={(e) => controls.start(e)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              controls.start(e);
+            }
+          }}
           className="cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 transition-colors mt-0.5 shrink-0"
         >
-          <GripVertical size={16} />
+          <GripVertical size={16} aria-hidden="true" />
         </div>
         {colorDot && (
-          <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${colorDot}`} />
+          <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${colorDot}`} aria-hidden="true" />
         )}
         <div className="flex-1 min-w-0">
           <h4 className="font-medium text-gray-900 mb-1 text-sm md:text-base leading-tight">
@@ -49,6 +58,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
                 key={cat.key}
                 onClick={() => onMove(value.id, currentCategory, cat.key)}
                 className={`w-6 h-6 rounded-full ${cat.color} opacity-40 hover:opacity-100 hover:scale-110 transition-all`}
+                aria-label={`Move ${value.name} to ${cat.label}`}
                 title={`Move to ${cat.label}`}
               />
             ))}

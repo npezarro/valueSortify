@@ -72,10 +72,10 @@ export function SingleCardView({ unsortedValues, onSort }) {
     <div className="flex flex-col items-center">
       {/* Progress counter */}
       <div className="mb-6 text-center">
-        <span className="text-sm font-medium text-gray-500">
+        <span className="text-sm font-medium text-gray-500" aria-live="polite">
           {unsortedValues.length - currentIndex} remaining
         </span>
-        <div className="w-48 bg-gray-200 rounded-full h-1.5 mt-2">
+        <div className="w-48 bg-gray-200 rounded-full h-1.5 mt-2" role="progressbar" aria-valuenow={83 - unsortedValues.length} aria-valuemin={0} aria-valuemax={83} aria-label="Sorting progress">
           <div
             className="bg-gray-900 h-1.5 rounded-full transition-all duration-300"
             style={{
@@ -86,7 +86,7 @@ export function SingleCardView({ unsortedValues, onSort }) {
       </div>
 
       {/* Card display area */}
-      <div className="relative w-full max-w-md mx-auto min-h-[200px] flex items-center justify-center mb-8">
+      <div className="relative w-full max-w-md mx-auto min-h-[200px] flex items-center justify-center mb-8" aria-live="polite" aria-atomic="true">
         <AnimatePresence mode="wait">
           {currentValue && !exitDirection && (
             <motion.div
@@ -128,6 +128,7 @@ export function SingleCardView({ unsortedValues, onSort }) {
       <div className="grid grid-cols-3 gap-3 w-full max-w-md">
         <button
           onClick={() => handleSort('veryImportant')}
+          aria-label="Sort as Very Important (keyboard shortcut Q)"
           className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-green-50 text-green-700 border-2 border-green-200 hover:bg-green-100 hover:border-green-300 transition-all font-medium active:scale-95"
         >
           <span className="text-sm md:text-base">Very Important</span>
@@ -137,6 +138,7 @@ export function SingleCardView({ unsortedValues, onSort }) {
         </button>
         <button
           onClick={() => handleSort('important')}
+          aria-label="Sort as Important (keyboard shortcut W)"
           className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-blue-50 text-blue-700 border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all font-medium active:scale-95"
         >
           <span className="text-sm md:text-base">Important</span>
@@ -146,6 +148,7 @@ export function SingleCardView({ unsortedValues, onSort }) {
         </button>
         <button
           onClick={() => handleSort('notImportant')}
+          aria-label="Sort as Not Important (keyboard shortcut E)"
           className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-gray-50 text-gray-600 border-2 border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all font-medium active:scale-95"
         >
           <span className="text-sm md:text-base">Not Important</span>
