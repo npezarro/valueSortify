@@ -126,13 +126,15 @@ export function SortingPhase({ state, save, reset }) {
               if (viewMode === 'card') return;
               setFilter(filter === cat.key ? 'remaining' : cat.key);
             }}
+            aria-label={`${cat.label}: ${cat.items.length} values`}
+            aria-pressed={viewMode === 'grid' ? filter === cat.key : undefined}
             className={`bg-white border rounded-lg p-3 text-center transition-all ${
               viewMode === 'grid' && filter === cat.key
                 ? 'border-gray-900 shadow-md'
                 : 'border-gray-200 hover:border-gray-300'
             } ${viewMode === 'card' ? 'cursor-default' : ''}`}
           >
-            <div className={`w-3 h-3 ${cat.color} rounded-full mx-auto mb-2`} />
+            <div className={`w-3 h-3 ${cat.color} rounded-full mx-auto mb-2`} aria-hidden="true" />
             <p className="text-xs md:text-sm font-medium text-gray-900">
               {cat.label}
             </p>
@@ -201,9 +203,9 @@ export function SortingPhase({ state, save, reset }) {
 
       {/* Reset confirmation modal */}
       {showResetConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="sorting-reset-title">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
+            <h3 id="sorting-reset-title" className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
             <p className="text-sm text-gray-600 mb-6">
               You&apos;ve categorized {sortedCount} value{sortedCount !== 1 ? 's' : ''}. This will clear all your progress and start from scratch.
             </p>

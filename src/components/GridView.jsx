@@ -14,7 +14,7 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8" role="list" aria-label="Values to sort">
         <AnimatePresence mode="popLayout">
           {displayValues.map((value) =>
             filter === 'remaining' ? (
