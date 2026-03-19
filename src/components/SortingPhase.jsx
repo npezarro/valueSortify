@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw } from 'lucide-react';
-import { ALL_VALUES } from '../values';
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
+import { sortValue, unsortValue, getRemainingValues } from '../lib/sorting';
 
 export function SortingPhase({ state, save, reset }) {
   const [filter, setFilter] = useState('remaining');
@@ -16,34 +16,17 @@ export function SortingPhase({ state, save, reset }) {
     }
   });
 
-  const sortedIds = new Set([
-    ...state.veryImportant.map((v) => v.id),
-    ...state.important.map((v) => v.id),
-    ...state.notImportant.map((v) => v.id),
-  ]);
-  const remaining = ALL_VALUES.filter((v) => !sortedIds.has(v.id));
-  const sortedCount = sortedIds.size;
+  const remaining = getRemainingValues(state);
+  const sortedCount =
+    state.veryImportant.length + state.important.length + state.notImportant.length;
 
   const handleSort = (valueId, category) => {
-    const value = ALL_VALUES.find((v) => v.id === valueId);
-    if (!value) return;
-
-    const updates = {
-      veryImportant: state.veryImportant.filter((v) => v.id !== valueId),
-      important: state.important.filter((v) => v.id !== valueId),
-      notImportant: state.notImportant.filter((v) => v.id !== valueId),
-    };
-
-    updates[category] = [...updates[category], value];
-    save(updates);
+    const updates = sortValue(state, valueId, category);
+    if (updates) save(updates);
   };
 
   const handleUnsort = (valueId) => {
-    save({
-      veryImportant: state.veryImportant.filter((v) => v.id !== valueId),
-      important: state.important.filter((v) => v.id !== valueId),
-      notImportant: state.notImportant.filter((v) => v.id !== valueId),
-    });
+    save(unsortValue(state, valueId));
   };
 
   const canProceed = remaining.length === 0;
