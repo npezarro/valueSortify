@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Reorder, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { DraggableCard } from './DraggableCard';
+import { moveCard as moveCardFn } from '../lib/sorting';
 
 const CATEGORIES = [
   { key: 'veryImportant', label: 'Very Important', color: 'bg-green-500' },
@@ -58,14 +59,9 @@ export function RankingPhase({ state, save, reset }) {
   const totalRanked =
     state.veryImportant.length + state.important.length + state.notImportant.length;
 
-  const moveCard = (cardId, fromCategory, toCategory) => {
-    const card = state[fromCategory].find((v) => v.id === cardId);
-    if (!card) return;
-
-    save({
-      [fromCategory]: state[fromCategory].filter((v) => v.id !== cardId),
-      [toCategory]: [card, ...state[toCategory]],
-    });
+  const handleMoveCard = (cardId, fromCategory, toCategory) => {
+    const updates = moveCardFn(state, cardId, fromCategory, toCategory);
+    if (updates) save(updates);
   };
 
   return (
@@ -91,7 +87,7 @@ export function RankingPhase({ state, save, reset }) {
             categoryKey={cat.key}
             values={state[cat.key]}
             onReorder={(newOrder) => save({ [cat.key]: newOrder })}
-            onMove={moveCard}
+            onMove={handleMoveCard}
           />
         ))}
       </div>

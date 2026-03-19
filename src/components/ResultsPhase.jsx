@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
+import { buildCSV, buildJSONExport } from '../lib/export';
 
 function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) {
   if (values.length === 0) return null;
@@ -33,27 +34,14 @@ export function ResultsPhase({ state, save, reset }) {
   const [showExport, setShowExport] = useState(false);
 
   const exportJSON = () => {
-    const data = {
-      veryImportant: state.veryImportant,
-      important: state.important,
-      notImportant: state.notImportant,
-      timestamp: new Date().toISOString(),
-    };
+    const data = buildJSONExport(state, new Date().toISOString());
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     download(blob, 'personal-values-results.json');
   };
 
   const exportCSV = () => {
-    const rows = ['Rank,Category,Value,Description'];
-    const addCategory = (values, category) => {
-      values.forEach((v, i) => {
-        rows.push(`${i + 1},"${category}","${v.name}","${v.description}"`);
-      });
-    };
-    addCategory(state.veryImportant, 'Very Important');
-    addCategory(state.important, 'Important');
-    addCategory(state.notImportant, 'Not Important');
-    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const csv = buildCSV(state);
+    const blob = new Blob([csv], { type: 'text/csv' });
     download(blob, 'personal-values-results.csv');
   };
 
