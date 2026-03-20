@@ -8,7 +8,7 @@ const exitVariants = {
   notImportant: { x: 300, opacity: 0, scale: 0.8 },
 };
 
-export function SingleCardView({ unsortedValues, onSort }) {
+export function SingleCardView({ unsortedValues, onSort, totalValues }) {
   const [exitDirection, setExitDirection] = useState(null);
 
   const currentIndex = 0;
@@ -75,11 +75,11 @@ export function SingleCardView({ unsortedValues, onSort }) {
         <span className="text-sm font-medium text-ink/50 font-body" aria-live="polite">
           {unsortedValues.length - currentIndex} remaining
         </span>
-        <div className="w-48 bg-sky/50 rounded-full h-1.5 mt-2" role="progressbar" aria-valuenow={83 - unsortedValues.length} aria-valuemin={0} aria-valuemax={83} aria-label="Sorting progress">
+        <div className="w-48 bg-sky/50 rounded-full h-1.5 mt-2" role="progressbar" aria-valuenow={totalValues - unsortedValues.length} aria-valuemin={0} aria-valuemax={totalValues} aria-label="Sorting progress">
           <div
             className="bg-ember h-1.5 rounded-full transition-all duration-300"
             style={{
-              width: `${((83 - unsortedValues.length) / 83) * 100}%`,
+              width: `${((totalValues - unsortedValues.length) / totalValues) * 100}%`,
             }}
           />
         </div>
@@ -177,4 +177,5 @@ SingleCardView.propTypes = {
     }),
   ).isRequired,
   onSort: PropTypes.func.isRequired,
+  totalValues: PropTypes.number.isRequired,
 };
