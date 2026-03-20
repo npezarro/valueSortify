@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
 import { buildCSV, buildJSONExport } from '../lib/export';
@@ -32,6 +32,30 @@ function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) 
 
 export function ResultsPhase({ state, save, reset }) {
   const [showExport, setShowExport] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const exportRef = useRef(null);
+
+  // Close export menu on Escape or click outside
+  useEffect(() => {
+    if (!showExport) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setShowExport(false);
+    };
+    const handleClick = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setShowExport(false);
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    document.addEventListener('mousedown', handleClick);
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [showExport]);
+
+  const totalRanked =
+    state.veryImportant.length + state.important.length + state.notImportant.length;
 
   const exportJSON = () => {
     const data = buildJSONExport(state, new Date().toISOString());
@@ -94,7 +118,7 @@ export function ResultsPhase({ state, save, reset }) {
     <div>
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
         <h2 className="text-2xl font-bold mb-2 flex items-center gap-3">
-          <Trophy className="text-yellow-500" size={24} />
+          <Trophy className="text-yellow-500" size={24} aria-hidden="true" />
           Your Personal Values Hierarchy
         </h2>
         <p className="text-gray-500 mb-6">
@@ -133,17 +157,17 @@ export function ResultsPhase({ state, save, reset }) {
             onClick={() => save({ phase: 2 })}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={16} aria-hidden="true" />
             Back to Ranking
           </button>
           <button
-            onClick={reset}
+            onClick={() => setShowResetConfirm(true)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={16} aria-hidden="true" />
             Start Over
           </button>
-          <div className="relative">
+          <div className="relative" ref={exportRef}>
             <button
               onClick={() => setShowExport(!showExport)}
               aria-expanded={showExport}
@@ -182,6 +206,32 @@ export function ResultsPhase({ state, save, reset }) {
           </div>
         </div>
       </div>
+
+      {/* Reset confirmation modal */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="results-reset-title">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-sm w-full shadow-card">
+            <h3 id="results-reset-title" className="text-lg font-display font-semibold text-ink mb-2">Start Over?</h3>
+            <p className="text-sm text-ink/60 mb-6 font-body">
+              You&apos;ve ranked {totalRanked} values across 3 categories. This will clear all your progress and start from scratch.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowResetConfirm(false)}
+                className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { reset(); setShowResetConfirm(false); }}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors font-body"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

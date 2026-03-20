@@ -18,20 +18,22 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
         <AnimatePresence mode="popLayout">
           {displayValues.map((value) =>
             filter === 'remaining' ? (
-              <ValueCard
-                key={value.id}
-                value={value}
-                showButtons
-                onSort={onSort}
-              />
+              <div key={value.id} role="listitem">
+                <ValueCard
+                  value={value}
+                  showButtons
+                  onSort={onSort}
+                />
+              </div>
             ) : (
-              <ValueCard
-                key={value.id}
-                value={value}
-                colorDot={categories.find((c) => c.key === filter)?.dotColor}
-                showButtons={false}
-                onSort={() => onUnsort(value.id)}
-              />
+              <div key={value.id} role="listitem">
+                <ValueCard
+                  value={value}
+                  colorDot={categories.find((c) => c.key === filter)?.dotColor}
+                  showButtons={false}
+                  onSort={() => onUnsort(value.id)}
+                />
+              </div>
             ),
           )}
         </AnimatePresence>
