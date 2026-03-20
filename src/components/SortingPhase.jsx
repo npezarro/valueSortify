@@ -4,6 +4,7 @@ import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw } from 'lucide-re
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
 import { sortValue, unsortValue, getRemainingValues } from '../lib/sorting';
+import { ALL_VALUES } from '../values';
 
 export function SortingPhase({ state, save, reset }) {
   const [filter, setFilter] = useState('remaining');
@@ -75,7 +76,7 @@ export function SortingPhase({ state, save, reset }) {
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
             title="Start over"
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={14} aria-hidden="true" />
             Start Over
           </button>
         ) : (
@@ -84,16 +85,17 @@ export function SortingPhase({ state, save, reset }) {
         <button
           onClick={toggleView}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/60 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full hover:bg-white transition-colors font-body"
+          aria-label={viewMode === 'card' ? 'Switch to grid view' : 'Switch to card view'}
           title={viewMode === 'card' ? 'Switch to grid view' : 'Switch to card view'}
         >
           {viewMode === 'card' ? (
             <>
-              <LayoutGrid size={14} />
+              <LayoutGrid size={14} aria-hidden="true" />
               Grid View
             </>
           ) : (
             <>
-              <CreditCard size={14} />
+              <CreditCard size={14} aria-hidden="true" />
               Card View
             </>
           )}
@@ -128,13 +130,13 @@ export function SortingPhase({ state, save, reset }) {
 
       {/* View-specific content */}
       {viewMode === 'card' ? (
-        <SingleCardView unsortedValues={remaining} onSort={handleSort} />
+        <SingleCardView unsortedValues={remaining} onSort={handleSort} totalValues={ALL_VALUES.length} />
       ) : (
         <>
           {/* Filter indicator (grid only) */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-ink/50" />
+              <Layers size={16} className="text-ink/50" aria-hidden="true" />
               <span className="text-sm text-ink/60 font-body">
                 {filter === 'remaining'
                   ? `${remaining.length} values to sort`
@@ -180,7 +182,7 @@ export function SortingPhase({ state, save, reset }) {
           }`}
         >
           Proceed to Ranking
-          <ArrowRight size={16} />
+          <ArrowRight size={16} aria-hidden="true" />
         </button>
       </div>
 
