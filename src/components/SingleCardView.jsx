@@ -60,8 +60,8 @@ export function SingleCardView({ unsortedValues, onSort }) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="text-4xl mb-4">&#10003;</div>
-        <p className="text-lg font-medium text-gray-900 mb-1">All values sorted!</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-lg font-display font-medium text-ink mb-1">All values sorted!</p>
+        <p className="text-sm text-ink/50 font-body">
           Proceed to ranking to order your values within each category.
         </p>
       </div>
@@ -72,12 +72,12 @@ export function SingleCardView({ unsortedValues, onSort }) {
     <div className="flex flex-col items-center">
       {/* Progress counter */}
       <div className="mb-6 text-center">
-        <span className="text-sm font-medium text-gray-500" aria-live="polite">
+        <span className="text-sm font-medium text-ink/50 font-body" aria-live="polite">
           {unsortedValues.length - currentIndex} remaining
         </span>
-        <div className="w-48 bg-gray-200 rounded-full h-1.5 mt-2" role="progressbar" aria-valuenow={83 - unsortedValues.length} aria-valuemin={0} aria-valuemax={83} aria-label="Sorting progress">
+        <div className="w-48 bg-sky/50 rounded-full h-1.5 mt-2" role="progressbar" aria-valuenow={83 - unsortedValues.length} aria-valuemin={0} aria-valuemax={83} aria-label="Sorting progress">
           <div
-            className="bg-gray-900 h-1.5 rounded-full transition-all duration-300"
+            className="bg-ember h-1.5 rounded-full transition-all duration-300"
             style={{
               width: `${((83 - unsortedValues.length) / 83) * 100}%`,
             }}
@@ -95,12 +95,12 @@ export function SingleCardView({ unsortedValues, onSort }) {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="w-full bg-white border border-gray-200 rounded-xl p-6 md:p-8 shadow-lg"
+              className="w-full bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-6 md:p-8 shadow-card"
             >
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
+              <h3 className="text-xl md:text-2xl font-display font-bold text-ink mb-2 text-center">
                 {currentValue.name}
               </h3>
-              <p className="text-sm md:text-base text-gray-500 text-center leading-relaxed">
+              <p className="text-sm md:text-base text-ink/50 text-center leading-relaxed font-body">
                 {currentValue.description}
               </p>
             </motion.div>
@@ -111,12 +111,12 @@ export function SingleCardView({ unsortedValues, onSort }) {
               initial={{ opacity: 1, x: 0, y: 0, scale: 1 }}
               animate={exitVariants[exitDirection]}
               transition={{ duration: 0.2, ease: 'easeIn' }}
-              className="w-full bg-white border border-gray-200 rounded-xl p-6 md:p-8 shadow-lg absolute"
+              className="w-full bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-6 md:p-8 shadow-card absolute"
             >
-              <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
+              <h3 className="text-xl md:text-2xl font-display font-bold text-ink mb-2 text-center">
                 {currentValue.name}
               </h3>
-              <p className="text-sm md:text-base text-gray-500 text-center leading-relaxed">
+              <p className="text-sm md:text-base text-ink/50 text-center leading-relaxed font-body">
                 {currentValue.description}
               </p>
             </motion.div>
@@ -129,40 +129,40 @@ export function SingleCardView({ unsortedValues, onSort }) {
         <button
           onClick={() => handleSort('veryImportant')}
           aria-label="Sort as Very Important (keyboard shortcut Q)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-green-50 text-green-700 border-2 border-green-200 hover:bg-green-100 hover:border-green-300 transition-all font-medium active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-ember/10 text-ember border-2 border-ember/20 hover:bg-ember/20 hover:border-ember/40 transition-all font-medium font-body active:scale-95"
         >
           <span className="text-sm md:text-base">Very Important</span>
-          <kbd className="text-[10px] md:text-xs bg-green-200 text-green-800 px-1.5 py-0.5 rounded font-mono">
+          <kbd className="text-[10px] md:text-xs bg-ember/20 text-ember px-1.5 py-0.5 rounded font-mono">
             Q
           </kbd>
         </button>
         <button
           onClick={() => handleSort('important')}
           aria-label="Sort as Important (keyboard shortcut W)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-blue-50 text-blue-700 border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-all font-medium active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-moss/10 text-moss border-2 border-moss/20 hover:bg-moss/20 hover:border-moss/40 transition-all font-medium font-body active:scale-95"
         >
           <span className="text-sm md:text-base">Important</span>
-          <kbd className="text-[10px] md:text-xs bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded font-mono">
+          <kbd className="text-[10px] md:text-xs bg-moss/20 text-moss px-1.5 py-0.5 rounded font-mono">
             W
           </kbd>
         </button>
         <button
           onClick={() => handleSort('notImportant')}
           aria-label="Sort as Not Important (keyboard shortcut E)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-lg bg-gray-50 text-gray-600 border-2 border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all font-medium active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-sky/30 text-ink/50 border-2 border-sky/50 hover:bg-sky/50 hover:border-sky/70 transition-all font-medium font-body active:scale-95"
         >
           <span className="text-sm md:text-base">Not Important</span>
-          <kbd className="text-[10px] md:text-xs bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded font-mono">
+          <kbd className="text-[10px] md:text-xs bg-sky/50 text-ink/60 px-1.5 py-0.5 rounded font-mono">
             E
           </kbd>
         </button>
       </div>
 
       {/* Keyboard hint */}
-      <p className="text-xs text-gray-400 mt-4 text-center">
-        Use <kbd className="bg-gray-100 px-1 rounded font-mono">Q</kbd>{' '}
-        <kbd className="bg-gray-100 px-1 rounded font-mono">W</kbd>{' '}
-        <kbd className="bg-gray-100 px-1 rounded font-mono">E</kbd> keys for quick sorting
+      <p className="text-xs text-ink/40 mt-4 text-center font-body">
+        Use <kbd className="bg-sand px-1 rounded font-mono">Q</kbd>{' '}
+        <kbd className="bg-sand px-1 rounded font-mono">W</kbd>{' '}
+        <kbd className="bg-sand px-1 rounded font-mono">E</kbd> keys for quick sorting
       </p>
     </div>
   );

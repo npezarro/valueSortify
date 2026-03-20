@@ -6,9 +6,9 @@ import { DraggableCard } from './DraggableCard';
 import { moveCard as moveCardFn } from '../lib/sorting';
 
 const CATEGORIES = [
-  { key: 'veryImportant', label: 'Very Important', color: 'bg-green-500' },
-  { key: 'important', label: 'Important', color: 'bg-blue-500' },
-  { key: 'notImportant', label: 'Not Important', color: 'bg-gray-400' },
+  { key: 'veryImportant', label: 'Very Important', color: 'bg-ember' },
+  { key: 'important', label: 'Important', color: 'bg-moss' },
+  { key: 'notImportant', label: 'Not Important', color: 'bg-sky' },
 ];
 
 function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) {
@@ -17,15 +17,15 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
   const otherCategories = CATEGORIES.filter((c) => c.key !== categoryKey);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
+    <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-4 md:p-6 shadow-card">
       <div className="flex items-center gap-2 mb-4">
         <div className={`w-4 h-4 ${color} rounded`} aria-hidden="true" />
-        <h3 className="text-base md:text-lg font-medium text-gray-900">
+        <h3 className="text-base md:text-lg font-display font-medium text-ink">
           {title}
         </h3>
-        <span className="text-sm text-gray-400 ml-auto">{values.length}</span>
+        <span className="text-sm text-ink/40 ml-auto font-body">{values.length}</span>
       </div>
-      <p className="text-xs text-gray-400 mb-4">
+      <p className="text-xs text-ink/40 mb-4 font-body">
         Drag to reorder, or use dots to move between categories
       </p>
       <Reorder.Group
@@ -70,7 +70,7 @@ export function RankingPhase({ state, save, reset }) {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowResetConfirm(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
           title="Start over"
         >
           <RotateCcw size={14} />
@@ -95,14 +95,14 @@ export function RankingPhase({ state, save, reset }) {
       <div className="flex justify-center gap-4">
         <button
           onClick={() => save({ phase: 1 })}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm bg-white/80 backdrop-blur-sm border border-black/5 text-ink/70 hover:bg-white transition-colors font-body"
         >
           <ArrowLeft size={16} />
           Back to Sorting
         </button>
         <button
           onClick={() => save({ phase: 3 })}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm bg-gray-900 text-white hover:bg-gray-800 shadow-md transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm bg-ember text-white hover:bg-ember/90 shadow-card transition-colors font-body"
         >
           <Trophy size={16} />
           View Results
@@ -112,21 +112,21 @@ export function RankingPhase({ state, save, reset }) {
       {/* Reset confirmation modal */}
       {showResetConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="ranking-reset-title">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
-            <h3 id="ranking-reset-title" className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
-            <p className="text-sm text-gray-600 mb-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-sm w-full shadow-card">
+            <h3 id="ranking-reset-title" className="text-lg font-display font-semibold text-ink mb-2">Start Over?</h3>
+            <p className="text-sm text-ink/60 mb-6 font-body">
               You&apos;ve ranked {totalRanked} values across 3 categories. This will clear all your progress and start from scratch.
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
               >
                 Cancel
               </button>
               <button
                 onClick={() => { reset(); setShowResetConfirm(false); }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors font-body"
               >
                 Reset
               </button>
