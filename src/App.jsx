@@ -36,27 +36,27 @@ export default function App() {
     state.veryImportant.length + state.important.length + state.notImportant.length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white/80 backdrop-blur-sm border-b border-black/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-3xl font-display font-bold text-ink">
                 Personal Values Card Sort
               </h1>
-              <p className="text-gray-500 mt-1 text-sm md:text-base">
+              <p className="text-ink/50 mt-1 text-sm md:text-base font-body">
                 Discover and prioritize what matters most to you
               </p>
             </div>
             <div className="hidden sm:flex items-center gap-4">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-ink/50 font-body">
                 Phase {phase} of 3
                 {phase === 1 && ` — ${sortedCount}/${ALL_VALUES.length} sorted`}
               </span>
-              <div className="bg-gray-200 rounded-full h-2 w-32" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
+              <div className="bg-sky/50 rounded-full h-2 w-32" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
                 <div
-                  className="bg-gray-900 h-2 rounded-full transition-all duration-300"
+                  className="bg-ember h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -68,25 +68,25 @@ export default function App() {
       {/* Main */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Phase instructions */}
-        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+        <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-5 mb-6 shadow-card">
           <div className="flex items-start gap-3">
-            <info.Icon className="text-gray-900 shrink-0 mt-0.5" size={20} aria-hidden="true" />
+            <info.Icon className="text-ember shrink-0 mt-0.5" size={20} aria-hidden="true" />
             <div>
-              <h2 className="text-lg font-semibold mb-1">{info.title}</h2>
-              <p className="text-sm text-gray-500">{info.description}</p>
+              <h2 className="text-lg font-display font-semibold mb-1 text-ink">{info.title}</h2>
+              <p className="text-sm text-ink/50 font-body">{info.description}</p>
               {phase === 1 && (
-                <div className="flex flex-wrap gap-4 mt-3 text-xs">
+                <div className="flex flex-wrap gap-4 mt-3 text-xs font-body">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-green-500 rounded" aria-hidden="true" />
-                    <span>Core values that define who you are</span>
+                    <div className="w-3 h-3 bg-ember rounded" aria-hidden="true" />
+                    <span className="text-ink/60">Core values that define who you are</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-blue-500 rounded" aria-hidden="true" />
-                    <span>Values that matter but aren&apos;t central</span>
+                    <div className="w-3 h-3 bg-moss rounded" aria-hidden="true" />
+                    <span className="text-ink/60">Values that matter but aren&apos;t central</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-gray-400 rounded" aria-hidden="true" />
-                    <span>Values that don&apos;t resonate with you</span>
+                    <div className="w-3 h-3 bg-sky rounded" aria-hidden="true" />
+                    <span className="text-ink/60">Values that don&apos;t resonate with you</span>
                   </div>
                 </div>
               )}
@@ -97,13 +97,13 @@ export default function App() {
         {/* Mobile progress */}
         <div className="sm:hidden mb-4">
           <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-ink/50 font-body">
               Phase {phase}/3
               {phase === 1 && ` — ${sortedCount}/${ALL_VALUES.length}`}
             </span>
-            <div className="flex-1 bg-gray-200 rounded-full h-1.5" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
+            <div className="flex-1 bg-sky/50 rounded-full h-1.5" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
               <div
-                className="bg-gray-900 h-1.5 rounded-full transition-all duration-300"
+                className="bg-ember h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>

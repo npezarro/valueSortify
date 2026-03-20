@@ -35,22 +35,22 @@ export function SortingPhase({ state, save, reset }) {
     {
       key: 'veryImportant',
       label: 'Very Important',
-      color: 'bg-green-500',
-      dotColor: 'bg-green-500',
+      color: 'bg-ember',
+      dotColor: 'bg-ember',
       items: state.veryImportant,
     },
     {
       key: 'important',
       label: 'Important',
-      color: 'bg-blue-500',
-      dotColor: 'bg-blue-500',
+      color: 'bg-moss',
+      dotColor: 'bg-moss',
       items: state.important,
     },
     {
       key: 'notImportant',
       label: 'Not Important',
-      color: 'bg-gray-400',
-      dotColor: 'bg-gray-400',
+      color: 'bg-sky',
+      dotColor: 'bg-sky',
       items: state.notImportant,
     },
   ];
@@ -72,7 +72,7 @@ export function SortingPhase({ state, save, reset }) {
         {sortedCount > 0 ? (
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
             title="Start over"
           >
             <RotateCcw size={14} />
@@ -83,7 +83,7 @@ export function SortingPhase({ state, save, reset }) {
         )}
         <button
           onClick={toggleView}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/60 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full hover:bg-white transition-colors font-body"
           title={viewMode === 'card' ? 'Switch to grid view' : 'Switch to card view'}
         >
           {viewMode === 'card' ? (
@@ -111,17 +111,17 @@ export function SortingPhase({ state, save, reset }) {
             }}
             aria-label={`${cat.label}: ${cat.items.length} values`}
             aria-pressed={viewMode === 'grid' ? filter === cat.key : undefined}
-            className={`bg-white border rounded-lg p-3 text-center transition-all ${
+            className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 text-center transition-all ${
               viewMode === 'grid' && filter === cat.key
-                ? 'border-gray-900 shadow-md'
-                : 'border-gray-200 hover:border-gray-300'
+                ? 'border-ink shadow-card'
+                : 'border-black/5 hover:border-black/10'
             } ${viewMode === 'card' ? 'cursor-default' : ''}`}
           >
             <div className={`w-3 h-3 ${cat.color} rounded-full mx-auto mb-2`} aria-hidden="true" />
-            <p className="text-xs md:text-sm font-medium text-gray-900">
+            <p className="text-xs md:text-sm font-medium text-ink font-body">
               {cat.label}
             </p>
-            <p className="text-lg font-bold text-gray-900">{cat.items.length}</p>
+            <p className="text-lg font-display font-bold text-ink">{cat.items.length}</p>
           </button>
         ))}
       </div>
@@ -134,8 +134,8 @@ export function SortingPhase({ state, save, reset }) {
           {/* Filter indicator (grid only) */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-gray-500" />
-              <span className="text-sm text-gray-600">
+              <Layers size={16} className="text-ink/50" />
+              <span className="text-sm text-ink/60 font-body">
                 {filter === 'remaining'
                   ? `${remaining.length} values to sort`
                   : `${
@@ -150,7 +150,7 @@ export function SortingPhase({ state, save, reset }) {
             {filter !== 'remaining' && (
               <button
                 onClick={() => setFilter('remaining')}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-ember hover:text-ember/80 font-medium font-body"
               >
                 Show unsorted
               </button>
@@ -173,10 +173,10 @@ export function SortingPhase({ state, save, reset }) {
         <button
           onClick={() => save({ phase: 2 })}
           disabled={!canProceed}
-          className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all ${
+          className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all font-body ${
             canProceed
-              ? 'bg-gray-900 text-white hover:bg-gray-800 shadow-md'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ? 'bg-ember text-white hover:bg-ember/90 shadow-card'
+              : 'bg-sky/50 text-ink/30 cursor-not-allowed'
           }`}
         >
           Proceed to Ranking
@@ -187,21 +187,21 @@ export function SortingPhase({ state, save, reset }) {
       {/* Reset confirmation modal */}
       {showResetConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="sorting-reset-title">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
-            <h3 id="sorting-reset-title" className="text-lg font-semibold text-gray-900 mb-2">Start Over?</h3>
-            <p className="text-sm text-gray-600 mb-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-sm w-full shadow-card">
+            <h3 id="sorting-reset-title" className="text-lg font-display font-semibold text-ink mb-2">Start Over?</h3>
+            <p className="text-sm text-ink/60 mb-6 font-body">
               You&apos;ve categorized {sortedCount} value{sortedCount !== 1 ? 's' : ''}. This will clear all your progress and start from scratch.
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
               >
                 Cancel
               </button>
               <button
                 onClick={() => { reset(); setShowResetConfirm(false); }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors font-body"
               >
                 Reset
               </button>

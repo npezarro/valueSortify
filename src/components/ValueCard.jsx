@@ -9,17 +9,17 @@ export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
-      className="bg-white border border-gray-200 rounded-lg p-3 md:p-4 shadow-sm min-h-[80px] flex flex-col justify-center"
+      className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-3 md:p-4 shadow-card min-h-[80px] flex flex-col justify-center"
     >
       <div className="flex items-start gap-2">
         {colorDot && (
           <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${colorDot}`} aria-hidden="true" />
         )}
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-gray-900 mb-1 text-sm md:text-base leading-tight">
+          <h4 className="font-body font-medium text-ink mb-1 text-sm md:text-base leading-tight">
             {value.name}
           </h4>
-          <p className="text-xs md:text-sm text-gray-500 leading-tight">
+          <p className="text-xs md:text-sm text-ink/50 leading-tight font-body">
             {value.description}
           </p>
         </div>
@@ -29,21 +29,21 @@ export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
           <button
             onClick={() => onSort(value.id, 'veryImportant')}
             aria-label={`Sort ${value.name} as Very Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-md bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition-colors font-medium"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-ember/10 text-ember border border-ember/20 hover:bg-ember/20 transition-colors font-medium font-body"
           >
             Very Important
           </button>
           <button
             onClick={() => onSort(value.id, 'important')}
             aria-label={`Sort ${value.name} as Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-md bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors font-medium"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-moss/10 text-moss border border-moss/20 hover:bg-moss/20 transition-colors font-medium font-body"
           >
             Important
           </button>
           <button
             onClick={() => onSort(value.id, 'notImportant')}
             aria-label={`Sort ${value.name} as Not Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-md bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors font-medium"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-sky/30 text-ink/50 border border-sky/50 hover:bg-sky/50 transition-colors font-medium font-body"
           >
             Not Important
           </button>
