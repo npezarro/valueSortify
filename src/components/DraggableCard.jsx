@@ -12,7 +12,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
       layout
       dragListener={false}
       dragControls={controls}
-      className="bg-white border border-gray-200 rounded-lg p-3 md:p-4 shadow-sm cursor-default select-none"
+      className="bg-card backdrop-blur-sm border border-black/5 rounded-2xl p-3 md:p-4 shadow-card cursor-default select-none"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -28,7 +28,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
         <div
           aria-hidden="true"
           onPointerDown={(e) => controls.start(e)}
-          className="cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 transition-colors mt-0.5 shrink-0"
+          className="cursor-grab active:cursor-grabbing touch-none text-ink/30 hover:text-ink/60 transition-colors mt-0.5 shrink-0"
         >
           <GripVertical size={16} />
         </div>
@@ -36,10 +36,10 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
           <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${colorDot}`} aria-hidden="true" />
         )}
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-gray-900 mb-1 text-sm md:text-base leading-tight">
+          <h4 className="font-body font-medium text-ink mb-1 text-sm md:text-base leading-tight">
             {value.name}
           </h4>
-          <p className="text-xs md:text-sm text-gray-500 leading-tight">
+          <p className="text-xs md:text-sm text-ink/40 font-body leading-tight">
             {value.description}
           </p>
         </div>

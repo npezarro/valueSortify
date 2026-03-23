@@ -40,7 +40,7 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
       </div>
 
       {filter !== 'remaining' && displayValues.length > 0 && (
-        <p className="text-center text-xs text-gray-400 mb-4">
+        <p className="text-center text-xs text-ink/30 font-body mb-4">
           Switch to &quot;Show unsorted&quot; to move cards back
         </p>
       )}
