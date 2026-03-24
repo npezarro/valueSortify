@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,6 +10,7 @@ const exitVariants = {
 
 export function SingleCardView({ unsortedValues, onSort, totalValues }) {
   const [exitDirection, setExitDirection] = useState(null);
+  const sortTimeoutRef = useRef(null);
 
   const currentIndex = 0;
 
@@ -19,14 +20,24 @@ export function SingleCardView({ unsortedValues, onSort, totalValues }) {
     (category) => {
       if (!currentValue) return;
       setExitDirection(category);
+      // Clear any pending sort timeout
+      if (sortTimeoutRef.current) clearTimeout(sortTimeoutRef.current);
       // Small delay to let exit animation start
-      setTimeout(() => {
+      sortTimeoutRef.current = setTimeout(() => {
         onSort(currentValue.id, category);
         setExitDirection(null);
+        sortTimeoutRef.current = null;
       }, 150);
     },
     [currentValue, onSort],
   );
+
+  // Clean up sort timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (sortTimeoutRef.current) clearTimeout(sortTimeoutRef.current);
+    };
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
