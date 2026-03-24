@@ -33,13 +33,21 @@ function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) 
 export function ResultsPhase({ state, save, reset }) {
   const [showExport, setShowExport] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [exportError, setExportError] = useState(null);
   const exportRef = useRef(null);
+  const exportTriggerRef = useRef(null);
+  const firstMenuItemRef = useRef(null);
 
-  // Close export menu on Escape or click outside
+  // Close export menu on Escape or click outside; focus first item on open
   useEffect(() => {
     if (!showExport) return;
+    // Focus first menu item when dropdown opens
+    firstMenuItemRef.current?.focus();
     const handleKey = (e) => {
-      if (e.key === 'Escape') setShowExport(false);
+      if (e.key === 'Escape') {
+        setShowExport(false);
+        exportTriggerRef.current?.focus();
+      }
     };
     const handleClick = (e) => {
       if (exportRef.current && !exportRef.current.contains(e.target)) {
@@ -70,39 +78,44 @@ export function ResultsPhase({ state, save, reset }) {
   };
 
   const exportPDF = async () => {
-    const { jsPDF } = await import('jspdf');
-    const { applyPlugin } = await import('jspdf-autotable');
-    applyPlugin(jsPDF);
+    try {
+      setExportError(null);
+      const { jsPDF } = await import('jspdf');
+      const { applyPlugin } = await import('jspdf-autotable');
+      applyPlugin(jsPDF);
 
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text('Personal Values Assessment Results', 20, 30);
-    doc.setFontSize(12);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 45);
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.text('Personal Values Assessment Results', 20, 30);
+      doc.setFontSize(12);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 45);
 
-    let y = 60;
-    const addSection = (title, values, rgb) => {
-      if (values.length === 0) return;
-      doc.setFontSize(16);
-      doc.setTextColor(...rgb);
-      doc.text(title, 20, y);
-      y += 10;
-      const body = values.map((v, i) => [(i + 1).toString(), v.name, v.description]);
-      doc.autoTable({
-        head: [['Rank', 'Value', 'Description']],
-        body,
-        startY: y,
-        headStyles: { fillColor: rgb },
-        margin: { left: 20, right: 20 },
-      });
-      y = doc.lastAutoTable.finalY + 15;
-    };
+      let y = 60;
+      const addSection = (title, values, rgb) => {
+        if (values.length === 0) return;
+        doc.setFontSize(16);
+        doc.setTextColor(...rgb);
+        doc.text(title, 20, y);
+        y += 10;
+        const body = values.map((v, i) => [(i + 1).toString(), v.name, v.description]);
+        doc.autoTable({
+          head: [['Rank', 'Value', 'Description']],
+          body,
+          startY: y,
+          headStyles: { fillColor: rgb },
+          margin: { left: 20, right: 20 },
+        });
+        y = doc.lastAutoTable.finalY + 15;
+      };
 
-    addSection('Very Important Values', state.veryImportant, [232, 93, 47]);
-    addSection('Important Values', state.important, [67, 106, 90]);
-    addSection('Not Important Values', state.notImportant, [201, 214, 223]);
+      addSection('Very Important Values', state.veryImportant, [232, 93, 47]);
+      addSection('Important Values', state.important, [67, 106, 90]);
+      addSection('Not Important Values', state.notImportant, [201, 214, 223]);
 
-    doc.save('personal-values-results.pdf');
+      doc.save('personal-values-results.pdf');
+    } catch {
+      setExportError('Failed to generate PDF. Please try CSV or JSON instead.');
+    }
   };
 
   const download = (blob, filename) => {
@@ -169,6 +182,7 @@ export function ResultsPhase({ state, save, reset }) {
           </button>
           <div className="relative" ref={exportRef}>
             <button
+              ref={exportTriggerRef}
               onClick={() => setShowExport(!showExport)}
               aria-expanded={showExport}
               aria-haspopup="true"
@@ -181,6 +195,7 @@ export function ResultsPhase({ state, save, reset }) {
             {showExport && (
               <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
                 <button
+                  ref={firstMenuItemRef}
                   onClick={() => { exportCSV(); setShowExport(false); }}
                   role="menuitem"
                   className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
@@ -205,6 +220,10 @@ export function ResultsPhase({ state, save, reset }) {
             )}
           </div>
         </div>
+
+        {exportError && (
+          <p className="text-sm text-red-600 text-center mt-3 font-body" role="alert">{exportError}</p>
+        )}
       </div>
 
       {/* Reset confirmation modal */}
@@ -217,6 +236,7 @@ export function ResultsPhase({ state, save, reset }) {
             </p>
             <div className="flex justify-end gap-3">
               <button
+                autoFocus
                 onClick={() => setShowResetConfirm(false)}
                 className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
               >
