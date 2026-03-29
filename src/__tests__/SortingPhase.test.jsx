@@ -5,15 +5,15 @@ import React, { forwardRef } from 'react';
 
 vi.mock('framer-motion', () => {
   const MotionDiv = forwardRef(function MotionDiv(props, ref) {
-    const { initial, animate, exit, transition, whileDrag, layout, ...rest } = props;
+    const { initial: _i, animate: _a, exit: _e, transition: _t, whileDrag: _wd, layout: _l, ...rest } = props;
     return React.createElement('div', { ...rest, ref });
   });
   return {
     motion: { div: MotionDiv },
     AnimatePresence: ({ children }) => children,
     Reorder: {
-      Group: forwardRef(function RG({ values, onReorder, axis, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
-      Item: forwardRef(function RI({ value, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
+      Group: forwardRef(function RG({ values: _v, onReorder: _or, axis: _ax, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
+      Item: forwardRef(function RI({ value: _v, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
     },
     useDragControls: () => ({ start: () => {} }),
   };
