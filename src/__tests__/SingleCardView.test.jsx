@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react';
 
 vi.mock('framer-motion', () => {
   const MotionDiv = forwardRef(function MotionDiv(props, ref) {
-    const { initial, animate, exit, transition, whileDrag, layout, ...rest } = props;
+    const { initial: _i, animate: _a, exit: _e, transition: _t, whileDrag: _wd, layout: _l, ...rest } = props;
     return React.createElement('div', { ...rest, ref });
   });
   return {
