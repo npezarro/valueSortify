@@ -34,4 +34,11 @@ export default [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
+  {
+    files: ['**/__tests__/**', '**/__mocks__/**'],
+    rules: {
+      'react/prop-types': 'off',
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ];

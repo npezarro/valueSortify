@@ -1,19 +1,19 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { forwardRef } from 'react';
 
 vi.mock('framer-motion', () => {
   const MotionDiv = forwardRef(function MotionDiv(props, ref) {
-    const { initial, animate, exit, transition, whileDrag, layout, dragListener, dragControls, ...rest } = props;
+    const { initial: _i, animate: _a, exit: _e, transition: _t, whileDrag: _wd, layout: _l, dragListener: _dl, dragControls: _dc, ...rest } = props;
     return React.createElement('div', { ...rest, ref });
   });
   return {
     motion: { div: MotionDiv, span: MotionDiv, li: MotionDiv, button: MotionDiv },
     AnimatePresence: ({ children }) => children,
     Reorder: {
-      Group: forwardRef(function RG({ values, onReorder, axis, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
-      Item: forwardRef(function RI({ value, dragListener, dragControls, layout, initial, animate, exit, whileDrag, transition, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
+      Group: forwardRef(function RG({ values: _v, onReorder: _or, axis: _ax, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
+      Item: forwardRef(function RI({ value: _v, dragListener: _dl, dragControls: _dc, layout: _l, initial: _i, animate: _a, exit: _e, whileDrag: _wd, transition: _t, ...rest }, ref) { return React.createElement('div', { ...rest, ref }); }),
     },
     useDragControls: () => ({ start: () => {} }),
   };
