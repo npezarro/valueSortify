@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  button:focus-visible,
+  [role="menuitem"]:focus-visible {
+    outline: 2px solid #e85d2f;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

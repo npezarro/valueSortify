@@ -26,11 +26,13 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
     >
       <div className="flex items-start gap-2">
         <div
-          aria-hidden="true"
+          role="button"
+          tabIndex={0}
+          aria-label={`Drag to reorder ${value.name}`}
           onPointerDown={(e) => controls.start(e)}
           className="cursor-grab active:cursor-grabbing touch-none text-ink/30 hover:text-ink/60 transition-colors mt-0.5 shrink-0"
         >
-          <GripVertical size={16} />
+          <GripVertical size={16} aria-hidden="true" />
         </div>
         {colorDot && (
           <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${colorDot}`} aria-hidden="true" />
