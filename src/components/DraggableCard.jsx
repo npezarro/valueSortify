@@ -12,6 +12,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
       layout
       dragListener={false}
       dragControls={controls}
+      role="listitem"
       className="bg-card backdrop-blur-sm border border-black/5 rounded-2xl p-3 md:p-4 shadow-card cursor-default select-none"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
