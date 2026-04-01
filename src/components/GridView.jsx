@@ -50,7 +50,9 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
   }, [focusIndex]);
 
   // Resize cardRefs array when displayValues changes
-  cardRefs.current = cardRefs.current.slice(0, displayValues.length);
+  useEffect(() => {
+    cardRefs.current = cardRefs.current.slice(0, displayValues.length);
+  }, [displayValues.length]);
 
   const handleFocus = useCallback((e) => {
     const card = e.target.closest('[data-value-id]');

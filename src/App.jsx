@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { ArrowDownWideNarrow, List, Trophy } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { SortingPhase } from './components/SortingPhase';
 import { RankingPhase } from './components/RankingPhase';
 import { ResultsPhase } from './components/ResultsPhase';
+import { WelcomeTour } from './components/WelcomeTour';
 import { ALL_VALUES } from './values';
 
 const PHASE_INFO = {
@@ -34,6 +36,10 @@ export default function App() {
 
   const sortedCount =
     state.veryImportant.length + state.important.length + state.notImportant.length;
+
+  const [showTour, setShowTour] = useState(
+    () => phase === 1 && sortedCount === 0 && !WelcomeTour.hasSeenOnboarding(),
+  );
 
   return (
     <div className="min-h-screen">
@@ -117,6 +123,8 @@ export default function App() {
           {phase === 3 && <ResultsPhase state={state} save={save} reset={reset} />}
         </div>
       </main>
+
+      {showTour && <WelcomeTour onDismiss={() => setShowTour(false)} />}
     </div>
   );
 }
