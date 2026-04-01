@@ -102,4 +102,33 @@ describe('SingleCardView', () => {
     expect(screen.getByText('Important')).toBeInTheDocument();
     expect(screen.getByText('Not Important')).toBeInTheDocument();
   });
+
+  it('shows undo button when canUndo is true', () => {
+    render(<SingleCardView unsortedValues={[makeValue(1, 'COURAGE')]} onSort={vi.fn()} onUndo={vi.fn()} canUndo={true} totalValues={5} />);
+    expect(screen.getByLabelText('Undo last sort (keyboard shortcut Z)')).toBeInTheDocument();
+  });
+
+  it('hides undo button when canUndo is false', () => {
+    render(<SingleCardView unsortedValues={[makeValue(1, 'COURAGE')]} onSort={vi.fn()} onUndo={vi.fn()} canUndo={false} totalValues={5} />);
+    expect(screen.queryByLabelText('Undo last sort (keyboard shortcut Z)')).not.toBeInTheDocument();
+  });
+
+  it('calls onUndo when undo button is clicked', async () => {
+    const onUndo = vi.fn();
+    render(<SingleCardView unsortedValues={[makeValue(1, 'COURAGE')]} onSort={vi.fn()} onUndo={onUndo} canUndo={true} totalValues={5} />);
+    await act(async () => { screen.getByLabelText('Undo last sort (keyboard shortcut Z)').click(); });
+    expect(onUndo).toHaveBeenCalled();
+  });
+
+  it('responds to Z keyboard shortcut for undo', async () => {
+    const onUndo = vi.fn();
+    render(<SingleCardView unsortedValues={[makeValue(1, 'COURAGE')]} onSort={vi.fn()} onUndo={onUndo} canUndo={true} totalValues={5} />);
+    await act(async () => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'z' })); });
+    expect(onUndo).toHaveBeenCalled();
+  });
+
+  it('shows Z hint in keyboard help when canUndo is true', () => {
+    render(<SingleCardView unsortedValues={[makeValue(1, 'COURAGE')]} onSort={vi.fn()} onUndo={vi.fn()} canUndo={true} totalValues={5} />);
+    expect(screen.getByText(/to undo/)).toBeInTheDocument();
+  });
 });

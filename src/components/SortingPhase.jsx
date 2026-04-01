@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw } from 'lucide-react';
 import { SingleCardView } from './SingleCardView';
@@ -9,6 +9,7 @@ import { ALL_VALUES } from '../values';
 export function SortingPhase({ state, save, reset }) {
   const [filter, setFilter] = useState('remaining');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [undoHistory, setUndoHistory] = useState([]);
   const [viewMode, setViewMode] = useState(() => {
     try {
       return localStorage.getItem('vs-view-mode') || 'card';
@@ -23,8 +24,20 @@ export function SortingPhase({ state, save, reset }) {
 
   const handleSort = (valueId, category) => {
     const updates = sortValue(state, valueId, category);
-    if (updates) save(updates);
+    if (updates) {
+      setUndoHistory((prev) => [...prev, { valueId, category }]);
+      save(updates);
+    }
   };
+
+  const handleUndo = useCallback(() => {
+    setUndoHistory((prev) => {
+      if (prev.length === 0) return prev;
+      const lastAction = prev[prev.length - 1];
+      save(unsortValue(state, lastAction.valueId));
+      return prev.slice(0, -1);
+    });
+  }, [state, save]);
 
   const handleUnsort = (valueId) => {
     save(unsortValue(state, valueId));
@@ -130,7 +143,7 @@ export function SortingPhase({ state, save, reset }) {
 
       {/* View-specific content */}
       {viewMode === 'card' ? (
-        <SingleCardView unsortedValues={remaining} onSort={handleSort} totalValues={ALL_VALUES.length} />
+        <SingleCardView unsortedValues={remaining} onSort={handleSort} onUndo={handleUndo} canUndo={undoHistory.length > 0} totalValues={ALL_VALUES.length} />
       ) : (
         <>
           {/* Filter indicator (grid only) */}
