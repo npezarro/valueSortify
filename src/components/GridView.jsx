@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { AnimatePresence } from 'framer-motion';
 import { ValueCard } from './ValueCard';
 
-export function GridView({ unsortedValues, sortedValues, filter, categories, onSort, onUnsort }) {
-  const displayValues =
+export function GridView({ unsortedValues, sortedValues, filter, categories, onSort, onUnsort, searchQuery = '' }) {
+  const categoryValues =
     filter === 'remaining'
       ? unsortedValues
       : filter === 'veryImportant'
@@ -12,32 +12,45 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
           ? sortedValues.important
           : sortedValues.notImportant;
 
+  const displayValues = searchQuery
+    ? categoryValues.filter((v) => {
+        const q = searchQuery.toLowerCase();
+        return v.name.toLowerCase().includes(q) || v.description.toLowerCase().includes(q);
+      })
+    : categoryValues;
+
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8" role="list" aria-label="Values to sort">
-        <AnimatePresence mode="popLayout">
-          {displayValues.map((value) =>
-            filter === 'remaining' ? (
-              <div key={value.id} role="listitem">
-                <ValueCard
-                  value={value}
-                  showButtons
-                  onSort={onSort}
-                />
-              </div>
-            ) : (
-              <div key={value.id} role="listitem">
-                <ValueCard
-                  value={value}
-                  colorDot={categories.find((c) => c.key === filter)?.dotColor}
-                  showButtons={false}
-                  onSort={() => onUnsort(value.id)}
-                />
-              </div>
-            ),
-          )}
-        </AnimatePresence>
-      </div>
+      {searchQuery && displayValues.length === 0 ? (
+        <p className="text-center text-sm text-ink/40 font-body py-8">
+          No values match &ldquo;{searchQuery}&rdquo;
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8" role="list" aria-label="Values to sort">
+          <AnimatePresence mode="popLayout">
+            {displayValues.map((value) =>
+              filter === 'remaining' ? (
+                <div key={value.id} role="listitem">
+                  <ValueCard
+                    value={value}
+                    showButtons
+                    onSort={onSort}
+                  />
+                </div>
+              ) : (
+                <div key={value.id} role="listitem">
+                  <ValueCard
+                    value={value}
+                    colorDot={categories.find((c) => c.key === filter)?.dotColor}
+                    showButtons={false}
+                    onSort={() => onUnsort(value.id)}
+                  />
+                </div>
+              ),
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
       {filter !== 'remaining' && displayValues.length > 0 && (
         <p className="text-center text-xs text-ink/30 font-body mb-4">
@@ -71,4 +84,5 @@ GridView.propTypes = {
   ).isRequired,
   onSort: PropTypes.func.isRequired,
   onUnsort: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string,
 };

@@ -89,4 +89,45 @@ describe('GridView', () => {
     render(<GridView {...defaultProps} filter="remaining" />);
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
   });
+
+  describe('search filtering', () => {
+    it('filters by value name', () => {
+      render(<GridView {...defaultProps} filter="remaining" searchQuery="cour" />);
+      expect(screen.getByText('COURAGE')).toBeInTheDocument();
+      expect(screen.queryByText('HONESTY')).not.toBeInTheDocument();
+    });
+
+    it('filters by description', () => {
+      render(<GridView {...defaultProps} filter="remaining" searchQuery="honesty" />);
+      expect(screen.getByText('HONESTY')).toBeInTheDocument();
+      expect(screen.queryByText('COURAGE')).not.toBeInTheDocument();
+    });
+
+    it('is case-insensitive', () => {
+      render(<GridView {...defaultProps} filter="remaining" searchQuery="COURAGE" />);
+      expect(screen.getByText('COURAGE')).toBeInTheDocument();
+    });
+
+    it('shows empty state when no values match', () => {
+      render(<GridView {...defaultProps} filter="remaining" searchQuery="zzzzz" />);
+      expect(screen.getByText(/No values match/)).toBeInTheDocument();
+      expect(screen.queryByRole('list')).not.toBeInTheDocument();
+    });
+
+    it('shows all values when searchQuery is empty', () => {
+      render(<GridView {...defaultProps} filter="remaining" searchQuery="" />);
+      expect(screen.getByText('COURAGE')).toBeInTheDocument();
+      expect(screen.getByText('HONESTY')).toBeInTheDocument();
+    });
+
+    it('filters sorted category values too', () => {
+      render(<GridView {...defaultProps} filter="veryImportant" searchQuery="lov" />);
+      expect(screen.getByText('LOVE')).toBeInTheDocument();
+    });
+
+    it('shows empty state for sorted category with no match', () => {
+      render(<GridView {...defaultProps} filter="veryImportant" searchQuery="zzz" />);
+      expect(screen.getByText(/No values match/)).toBeInTheDocument();
+    });
+  });
 });
