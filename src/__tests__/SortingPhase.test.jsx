@@ -114,4 +114,46 @@ describe('SortingPhase', () => {
     render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
     expect(screen.getByText('Proceed to Ranking')).toBeInTheDocument();
   });
+
+  describe('search in grid view', () => {
+    it('shows search input in grid view', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      expect(screen.getByLabelText('Search values by name or description')).toBeInTheDocument();
+    });
+
+    it('does not show search input in card view', () => {
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.queryByLabelText('Search values by name or description')).not.toBeInTheDocument();
+    });
+
+    it('shows clear button when search has text', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      await user.type(screen.getByLabelText('Search values by name or description'), 'test');
+      expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
+    });
+
+    it('clears search when clear button clicked', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      const input = screen.getByLabelText('Search values by name or description');
+      await user.type(input, 'test');
+      await user.click(screen.getByLabelText('Clear search'));
+      expect(input).toHaveValue('');
+    });
+
+    it('clears search when switching to card view', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      await user.type(screen.getByLabelText('Search values by name or description'), 'test');
+      await user.click(screen.getByLabelText('Switch to card view'));
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      expect(screen.getByLabelText('Search values by name or description')).toHaveValue('');
+    });
+  });
 });
