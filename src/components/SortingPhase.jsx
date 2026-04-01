@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw } from 'lucide-react';
+import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw, Search, X } from 'lucide-react';
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
 import { sortValue, unsortValue, getRemainingValues } from '../lib/sorting';
@@ -10,6 +10,7 @@ export function SortingPhase({ state, save, reset }) {
   const [filter, setFilter] = useState('remaining');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [undoHistory, setUndoHistory] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState(() => {
     try {
       return localStorage.getItem('vs-view-mode') || 'card';
@@ -75,8 +76,11 @@ export function SortingPhase({ state, save, reset }) {
     try {
       localStorage.setItem('vs-view-mode', next);
     } catch { /* localStorage may be unavailable */ }
-    // Reset filter when switching back to card view
-    if (next === 'card') setFilter('remaining');
+    // Reset filter and search when switching back to card view
+    if (next === 'card') {
+      setFilter('remaining');
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -146,7 +150,27 @@ export function SortingPhase({ state, save, reset }) {
         <SingleCardView unsortedValues={remaining} onSort={handleSort} onUndo={handleUndo} canUndo={undoHistory.length > 0} totalValues={ALL_VALUES.length} />
       ) : (
         <>
-          {/* Filter indicator (grid only) */}
+          {/* Search + filter indicator (grid only) */}
+          <div className="relative mb-4">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none" aria-hidden="true" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search values..."
+              aria-label="Search values by name or description"
+              className="w-full pl-9 pr-8 py-2 text-sm font-body text-ink bg-white/80 backdrop-blur-sm border border-black/5 rounded-full focus:outline-none focus:border-ink/20 focus:ring-1 focus:ring-ink/10 placeholder:text-ink/30 transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/60 transition-colors"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Layers size={16} className="text-ink/50" aria-hidden="true" />
@@ -179,6 +203,7 @@ export function SortingPhase({ state, save, reset }) {
             categories={categories}
             onSort={handleSort}
             onUnsort={handleUnsort}
+            searchQuery={searchQuery}
           />
         </>
       )}
