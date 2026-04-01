@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Undo2 } from 'lucide-react';
 
 const exitVariants = {
   veryImportant: { x: -300, opacity: 0, scale: 0.8 },
@@ -8,7 +9,7 @@ const exitVariants = {
   notImportant: { x: 300, opacity: 0, scale: 0.8 },
 };
 
-export function SingleCardView({ unsortedValues, onSort, totalValues }) {
+export function SingleCardView({ unsortedValues, onSort, onUndo, canUndo, totalValues }) {
   const [exitDirection, setExitDirection] = useState(null);
   const sortTimeoutRef = useRef(null);
 
@@ -60,12 +61,15 @@ export function SingleCardView({ unsortedValues, onSort, totalValues }) {
         case 'e':
           handleSort('notImportant');
           break;
+        case 'z':
+          if (onUndo) onUndo();
+          break;
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [handleSort]);
+  }, [handleSort, onUndo]);
 
   if (unsortedValues.length === 0) {
     return (
@@ -169,11 +173,27 @@ export function SingleCardView({ unsortedValues, onSort, totalValues }) {
         </button>
       </div>
 
+      {/* Undo button */}
+      {canUndo && (
+        <button
+          onClick={onUndo}
+          className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
+          aria-label="Undo last sort (keyboard shortcut Z)"
+        >
+          <Undo2 size={14} aria-hidden="true" />
+          Undo
+          <kbd className="bg-sand px-1 rounded font-mono text-[10px]">Z</kbd>
+        </button>
+      )}
+
       {/* Keyboard hint */}
       <p className="text-xs text-ink/40 mt-4 text-center font-body">
         Use <kbd className="bg-sand px-1 rounded font-mono">Q</kbd>{' '}
         <kbd className="bg-sand px-1 rounded font-mono">W</kbd>{' '}
-        <kbd className="bg-sand px-1 rounded font-mono">E</kbd> keys for quick sorting
+        <kbd className="bg-sand px-1 rounded font-mono">E</kbd> to sort
+        {canUndo && (
+          <>, <kbd className="bg-sand px-1 rounded font-mono">Z</kbd> to undo</>
+        )}
       </p>
     </div>
   );
@@ -188,5 +208,7 @@ SingleCardView.propTypes = {
     }),
   ).isRequired,
   onSort: PropTypes.func.isRequired,
+  onUndo: PropTypes.func,
+  canUndo: PropTypes.bool,
   totalValues: PropTypes.number.isRequired,
 };
