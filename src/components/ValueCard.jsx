@@ -1,15 +1,21 @@
+import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
+export const ValueCard = forwardRef(function ValueCard({ value, onSort, showButtons = false, colorDot, focused = false, tabIndex }, ref) {
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
-      className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-3 md:p-4 shadow-card min-h-[80px] flex flex-col justify-center"
+      tabIndex={tabIndex}
+      data-value-id={value.id}
+      className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 md:p-4 shadow-card min-h-[80px] flex flex-col justify-center outline-none transition-all ${
+        focused ? 'border-ember ring-2 ring-ember/30' : 'border-black/5'
+      }`}
     >
       <div className="flex items-start gap-2">
         {colorDot && (
@@ -51,7 +57,7 @@ export function ValueCard({ value, onSort, showButtons = false, colorDot }) {
       )}
     </motion.div>
   );
-}
+});
 
 ValueCard.propTypes = {
   value: PropTypes.shape({
@@ -62,4 +68,6 @@ ValueCard.propTypes = {
   onSort: PropTypes.func,
   showButtons: PropTypes.bool,
   colorDot: PropTypes.string,
+  focused: PropTypes.bool,
+  tabIndex: PropTypes.number,
 };
