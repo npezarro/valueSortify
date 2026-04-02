@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { buildCSV, buildJSONExport } from '../lib/export';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
 
 const v1 = { id: 1, name: 'ACCEPTANCE', description: 'to be accepted as I am' };
 const v2 = { id: 2, name: 'ACCURACY', description: 'to be accurate in my opinions and beliefs' };
@@ -110,5 +110,139 @@ describe('buildJSONExport', () => {
   it('has exactly four keys', () => {
     const result = buildJSONExport(emptyState, '2026-01-01T00:00:00.000Z');
     expect(Object.keys(result)).toEqual(['veryImportant', 'important', 'notImportant', 'timestamp']);
+  });
+});
+
+describe('buildImageBlob', () => {
+  let mockCtx;
+  let mockCanvas;
+  let toBlobCallback;
+
+  beforeEach(() => {
+    mockCtx = {
+      scale: vi.fn(),
+      fillRect: vi.fn(),
+      fillText: vi.fn(),
+      fill: vi.fn(),
+      stroke: vi.fn(),
+      beginPath: vi.fn(),
+      moveTo: vi.fn(),
+      lineTo: vi.fn(),
+      quadraticCurveTo: vi.fn(),
+      closePath: vi.fn(),
+      measureText: vi.fn(() => ({ width: 50 })),
+      fillStyle: '',
+      strokeStyle: '',
+      lineWidth: 1,
+      font: '',
+      textAlign: 'left',
+    };
+    mockCanvas = {
+      width: 0,
+      height: 0,
+      getContext: vi.fn(() => mockCtx),
+      toBlob: vi.fn((cb) => { toBlobCallback = cb; cb(new Blob(['mock'], { type: 'image/png' })); }),
+    };
+    vi.spyOn(document, 'createElement').mockImplementation((tag) => {
+      if (tag === 'canvas') return mockCanvas;
+      return document.createElement.wrappedMethod
+        ? document.createElement.wrappedMethod.call(document, tag)
+        : Object.create(null);
+    });
+  });
+
+  it('returns a PNG blob', async () => {
+    const state = {
+      veryImportant: [v1, v2],
+      important: [v3],
+      notImportant: [],
+    };
+    const blob = await buildImageBlob(state);
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.type).toBe('image/png');
+  });
+
+  it('creates a canvas with 2x dimensions for retina', async () => {
+    const state = { veryImportant: [v1], important: [v2], notImportant: [] };
+    await buildImageBlob(state);
+    expect(mockCanvas.getContext).toHaveBeenCalledWith('2d');
+    expect(mockCtx.scale).toHaveBeenCalledWith(2, 2);
+    expect(mockCanvas.width).toBeGreaterThan(0);
+    expect(mockCanvas.height).toBeGreaterThan(0);
+    // Width should be 2x the logical width (800)
+    expect(mockCanvas.width).toBe(1600);
+  });
+
+  it('draws value names on the canvas', async () => {
+    const state = {
+      veryImportant: [v1],
+      important: [],
+      notImportant: [],
+    };
+    await buildImageBlob(state);
+    const textCalls = mockCtx.fillText.mock.calls.map((c) => c[0]);
+    expect(textCalls.some((t) => t === 'ACCEPTANCE')).toBe(true);
+  });
+
+  it('draws section headers', async () => {
+    const state = {
+      veryImportant: [v1],
+      important: [v2],
+      notImportant: [],
+    };
+    await buildImageBlob(state);
+    const textCalls = mockCtx.fillText.mock.calls.map((c) => c[0]);
+    expect(textCalls.some((t) => t.includes('Very Important'))).toBe(true);
+    expect(textCalls.some((t) => t.includes('Important'))).toBe(true);
+  });
+
+  it('draws rank numbers', async () => {
+    const state = {
+      veryImportant: [v1, v2, v3],
+      important: [],
+      notImportant: [],
+    };
+    await buildImageBlob(state);
+    const textCalls = mockCtx.fillText.mock.calls.map((c) => c[0]);
+    expect(textCalls).toContain('1.');
+    expect(textCalls).toContain('2.');
+    expect(textCalls).toContain('3.');
+  });
+
+  it('limits to top 10 values per section', async () => {
+    const manyValues = Array.from({ length: 15 }, (_, i) => ({
+      id: i + 1,
+      name: `VALUE_${i + 1}`,
+      description: `desc ${i + 1}`,
+    }));
+    const state = {
+      veryImportant: manyValues,
+      important: [],
+      notImportant: [],
+    };
+    await buildImageBlob(state);
+    const textCalls = mockCtx.fillText.mock.calls.map((c) => c[0]);
+    // Should have ranks 1-10 but not 11-15
+    expect(textCalls).toContain('10.');
+    expect(textCalls).not.toContain('11.');
+  });
+
+  it('includes footer text', async () => {
+    const state = { veryImportant: [v1], important: [], notImportant: [] };
+    await buildImageBlob(state);
+    const textCalls = mockCtx.fillText.mock.calls.map((c) => c[0]);
+    expect(textCalls.some((t) => t.includes('ValueSortify'))).toBe(true);
+  });
+
+  it('handles empty categories gracefully', async () => {
+    const state = { veryImportant: [], important: [], notImportant: [] };
+    const blob = await buildImageBlob(state);
+    expect(blob).toBeInstanceOf(Blob);
+  });
+
+  it('calls toBlob with png mime type', async () => {
+    const state = { veryImportant: [v1], important: [], notImportant: [] };
+    await buildImageBlob(state);
+    expect(mockCanvas.toBlob).toHaveBeenCalledWith(expect.any(Function), 'image/png');
   });
 });
