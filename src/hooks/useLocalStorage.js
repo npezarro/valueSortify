@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 const STORAGE_KEY = 'valuesortify-session';
 
@@ -18,12 +18,18 @@ export function useLocalStorage() {
     return DEFAULT_STATE;
   });
 
+  const [justSaved, setJustSaved] = useState(false);
+  const timerRef = useRef(null);
+
   const save = useCallback((updates) => {
     setState((prev) => {
       const next = { ...prev, ...updates };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       return next;
     });
+    setJustSaved(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setJustSaved(false), 1500);
   }, []);
 
   const reset = useCallback(() => {
@@ -31,5 +37,5 @@ export function useLocalStorage() {
     setState(DEFAULT_STATE);
   }, []);
 
-  return { state, save, reset };
+  return { state, save, reset, justSaved };
 }

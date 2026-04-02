@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDownWideNarrow, List, Trophy } from 'lucide-react';
+import { ArrowDownWideNarrow, List, Trophy, Check } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { SortingPhase } from './components/SortingPhase';
 import { RankingPhase } from './components/RankingPhase';
@@ -29,7 +29,7 @@ const PHASE_INFO = {
 };
 
 export default function App() {
-  const { state, save, reset } = useLocalStorage();
+  const { state, save, reset, justSaved } = useLocalStorage();
   const phase = state.phase || 1;
   const info = PHASE_INFO[phase];
   const progress = (phase / 3) * 100;
@@ -60,6 +60,12 @@ export default function App() {
                 Phase {phase} of 3
                 {phase === 1 && ` — ${sortedCount}/${ALL_VALUES.length} sorted`}
               </span>
+              {justSaved && (
+                <span className="flex items-center gap-1 text-xs text-moss font-body animate-fade-in" role="status">
+                  <Check size={12} aria-hidden="true" />
+                  Saved
+                </span>
+              )}
               <div className="bg-sky/50 rounded-full h-2 w-32" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Phase ${phase} of 3 progress`}>
                 <div
                   className="bg-ember h-2 rounded-full transition-all duration-300"
