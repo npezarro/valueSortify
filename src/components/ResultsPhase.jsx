@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
-import { buildCSV, buildJSONExport } from '../lib/export';
+import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
 
 function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) {
   if (values.length === 0) return null;
@@ -75,6 +75,16 @@ export function ResultsPhase({ state, save, reset }) {
     const csv = buildCSV(state);
     const blob = new Blob([csv], { type: 'text/csv' });
     download(blob, 'personal-values-results.csv');
+  };
+
+  const exportImage = async () => {
+    try {
+      setExportError(null);
+      const blob = await buildImageBlob(state);
+      download(blob, 'personal-values-results.png');
+    } catch {
+      setExportError('Failed to generate image. Please try PDF or CSV instead.');
+    }
   };
 
   const exportPDF = async () => {
@@ -208,6 +218,13 @@ export function ResultsPhase({ state, save, reset }) {
                   className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
                 >
                   Export as PDF
+                </button>
+                <button
+                  onClick={() => { exportImage(); setShowExport(false); }}
+                  role="menuitem"
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
+                >
+                  Export as Image
                 </button>
                 <button
                   onClick={() => { exportJSON(); setShowExport(false); }}
