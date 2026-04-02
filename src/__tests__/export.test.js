@@ -116,7 +116,7 @@ describe('buildJSONExport', () => {
 describe('buildImageBlob', () => {
   let mockCtx;
   let mockCanvas;
-  let toBlobCallback;
+  let _toBlobCallback;
 
   beforeEach(() => {
     mockCtx = {
@@ -141,7 +141,7 @@ describe('buildImageBlob', () => {
       width: 0,
       height: 0,
       getContext: vi.fn(() => mockCtx),
-      toBlob: vi.fn((cb) => { toBlobCallback = cb; cb(new Blob(['mock'], { type: 'image/png' })); }),
+      toBlob: vi.fn((cb) => { _toBlobCallback = cb; cb(new Blob(['mock'], { type: 'image/png' })); }),
     };
     vi.spyOn(document, 'createElement').mockImplementation((tag) => {
       if (tag === 'canvas') return mockCanvas;
