@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowDownWideNarrow, List, Trophy, LayoutGrid, CreditCard, Keyboard, ArrowRight } from 'lucide-react';
 

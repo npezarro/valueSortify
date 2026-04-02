@@ -39,6 +39,7 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
 
   // Reset focus when values change (sort action, filter change, search)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting derived keyboard-nav state when deps change
     setFocusIndex(-1);
   }, [filter, searchQuery, displayValues.length]);
 
@@ -139,7 +140,6 @@ export function GridView({ unsortedValues, sortedValues, filter, categories, onS
               Use arrow keys to navigate, <kbd className="px-1 py-0.5 bg-white/80 border border-black/10 rounded text-[10px] font-mono">Q</kbd> <kbd className="px-1 py-0.5 bg-white/80 border border-black/10 rounded text-[10px] font-mono">W</kbd> <kbd className="px-1 py-0.5 bg-white/80 border border-black/10 rounded text-[10px] font-mono">E</kbd> to sort focused card
             </p>
           )}
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={gridRef}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8"
