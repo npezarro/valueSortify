@@ -196,7 +196,7 @@ export function ResultsPhase({ state, save, reset }) {
               onClick={() => setShowExport(!showExport)}
               aria-expanded={showExport}
               aria-haspopup="true"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ink text-sand hover:bg-ink/80 shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ember text-white hover:bg-ember/80 shadow-md transition-colors"
             >
               <Download size={16} aria-hidden="true" />
               Export
@@ -239,7 +239,7 @@ export function ResultsPhase({ state, save, reset }) {
         </div>
 
         {exportError && (
-          <p className="text-sm text-red-600 text-center mt-3 font-body" role="alert">{exportError}</p>
+          <p className="text-sm text-destructive text-center mt-3 font-body" role="alert">{exportError}</p>
         )}
       </div>
 
@@ -261,7 +261,7 @@ export function ResultsPhase({ state, save, reset }) {
               </button>
               <button
                 onClick={() => { reset(); setShowResetConfirm(false); }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors font-body"
+                className="px-4 py-2 text-sm font-medium text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors font-body"
               >
                 Reset
               </button>
