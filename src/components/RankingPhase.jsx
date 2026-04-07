@@ -127,7 +127,7 @@ export function RankingPhase({ state, save, reset }) {
               </button>
               <button
                 onClick={() => { reset(); setShowResetConfirm(false); }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-full hover:bg-red-700 transition-colors font-body"
+                className="px-4 py-2 text-sm font-medium text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors font-body"
               >
                 Reset
               </button>

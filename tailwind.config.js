@@ -9,6 +9,7 @@ export default {
         ember: '#e85d2f',
         moss: '#436a5a',
         sky: '#c9d6df',
+        destructive: '#dc2626',
         card: 'rgba(250,250,248,0.88)',
       },
       fontFamily: {
