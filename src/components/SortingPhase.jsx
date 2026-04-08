@@ -159,7 +159,7 @@ export function SortingPhase({ state, save, reset }) {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search values..."
               aria-label="Search values by name or description"
-              className="w-full pl-9 pr-8 py-2 text-sm font-body text-ink bg-white/80 backdrop-blur-sm border border-black/5 rounded-full focus:outline-none focus:border-ink/20 focus:ring-1 focus:ring-ink/10 placeholder:text-ink/30 transition-colors"
+              className="w-full pl-9 pr-8 py-2 text-sm font-body text-ink bg-white/80 backdrop-blur-sm border border-black/5 rounded-full focus-visible:outline-none focus-visible:border-ink/20 focus-visible:ring-1 focus-visible:ring-ink/10 placeholder:text-ink/30 transition-colors"
             />
             {searchQuery && (
               <button
