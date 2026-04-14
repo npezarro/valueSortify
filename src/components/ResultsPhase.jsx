@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
 import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
@@ -37,17 +37,53 @@ export function ResultsPhase({ state, save, reset }) {
   const [exportError, setExportError] = useState(null);
   const exportRef = useRef(null);
   const exportTriggerRef = useRef(null);
-  const firstMenuItemRef = useRef(null);
+  const menuItemsRef = useRef([]);
 
-  // Close export menu on Escape or click outside; focus first item on open
+  const setMenuItemRef = useCallback((el, index) => {
+    menuItemsRef.current[index] = el;
+  }, []);
+
+  // Close export menu on Escape or click outside; focus first item on open; arrow key navigation
   useEffect(() => {
     if (!showExport) return;
     // Focus first menu item when dropdown opens
-    firstMenuItemRef.current?.focus();
+    menuItemsRef.current[0]?.focus();
+
     const handleKey = (e) => {
-      if (e.key === 'Escape') {
-        setShowExport(false);
-        exportTriggerRef.current?.focus();
+      const items = menuItemsRef.current.filter(Boolean);
+      const currentIndex = items.indexOf(document.activeElement);
+
+      switch (e.key) {
+        case 'Escape':
+          setShowExport(false);
+          exportTriggerRef.current?.focus();
+          break;
+        case 'ArrowDown': {
+          e.preventDefault();
+          const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+          items[next]?.focus();
+          break;
+        }
+        case 'ArrowUp': {
+          e.preventDefault();
+          const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+          items[prev]?.focus();
+          break;
+        }
+        case 'Home':
+          e.preventDefault();
+          items[0]?.focus();
+          break;
+        case 'End':
+          e.preventDefault();
+          items[items.length - 1]?.focus();
+          break;
+        case 'Tab':
+          // Close menu on Tab to prevent focus from escaping into the page
+          setShowExport(false);
+          break;
+        default:
+          break;
       }
     };
     const handleClick = (e) => {
@@ -206,31 +242,38 @@ export function ResultsPhase({ state, save, reset }) {
             {showExport && (
               <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
                 <button
-                  ref={firstMenuItemRef}
+                  ref={(el) => setMenuItemRef(el, 0)}
                   onClick={() => { exportCSV(); setShowExport(false); }}
                   role="menuitem"
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
+                  tabIndex={-1}
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
                 >
                   Export as CSV
                 </button>
                 <button
+                  ref={(el) => setMenuItemRef(el, 1)}
                   onClick={() => { exportPDF(); setShowExport(false); }}
                   role="menuitem"
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
+                  tabIndex={-1}
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
                 >
                   Export as PDF
                 </button>
                 <button
+                  ref={(el) => setMenuItemRef(el, 2)}
                   onClick={() => { exportImage(); setShowExport(false); }}
                   role="menuitem"
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
+                  tabIndex={-1}
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
                 >
                   Export as Image
                 </button>
                 <button
+                  ref={(el) => setMenuItemRef(el, 3)}
                   onClick={() => { exportJSON(); setShowExport(false); }}
                   role="menuitem"
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50"
+                  tabIndex={-1}
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
                 >
                   Export as JSON
                 </button>

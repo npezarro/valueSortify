@@ -218,4 +218,24 @@ describe('App', () => {
     const liveRegion = document.querySelector('[aria-live="polite"]');
     expect(liveRegion).toBeInTheDocument();
   });
+
+  // ── Skip-to-content link (WCAG 2.4.1) ────────────
+
+  it('renders a skip-to-content link as the first focusable element', () => {
+    localStorageMock._setRaw('vs-onboarding-seen', '1');
+    render(<App />);
+    const skipLink = screen.getByText('Skip to content');
+    expect(skipLink).toBeInTheDocument();
+    expect(skipLink.tagName).toBe('A');
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+  });
+
+  it('skip link target exists on main element', () => {
+    localStorageMock._setRaw('vs-onboarding-seen', '1');
+    render(<App />);
+    const main = document.getElementById('main-content');
+    expect(main).toBeInTheDocument();
+    expect(main.tagName).toBe('MAIN');
+    expect(main).toHaveAttribute('tabindex', '-1');
+  });
 });

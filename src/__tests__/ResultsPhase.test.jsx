@@ -111,4 +111,72 @@ describe('ResultsPhase', () => {
     const ones = screen.getAllByText('1.');
     expect(ones.length).toBeGreaterThanOrEqual(3); // one per group
   });
+
+  // ── Export menu keyboard navigation (WCAG 2.1.1) ──
+
+  it('focuses first menu item when export dropdown opens', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    expect(document.activeElement).toHaveTextContent('Export as CSV');
+  });
+
+  it('ArrowDown moves focus to next menu item', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toHaveTextContent('Export as PDF');
+  });
+
+  it('ArrowDown wraps from last to first menu item', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    // Navigate to last item (JSON is 4th, so 3 ArrowDown from CSV)
+    await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+    expect(document.activeElement).toHaveTextContent('Export as JSON');
+    // Wrap around
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toHaveTextContent('Export as CSV');
+  });
+
+  it('ArrowUp moves focus to previous menu item', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    // From first item, ArrowUp wraps to last
+    await user.keyboard('{ArrowUp}');
+    expect(document.activeElement).toHaveTextContent('Export as JSON');
+  });
+
+  it('Home key focuses first menu item', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.keyboard('{ArrowDown}{ArrowDown}');
+    expect(document.activeElement).toHaveTextContent('Export as Image');
+    await user.keyboard('{Home}');
+    expect(document.activeElement).toHaveTextContent('Export as CSV');
+  });
+
+  it('End key focuses last menu item', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.keyboard('{End}');
+    expect(document.activeElement).toHaveTextContent('Export as JSON');
+  });
+
+  it('Escape closes the export menu and returns focus to trigger', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    const trigger = screen.getByRole('button', { name: /Export/ });
+    await user.click(trigger);
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(trigger);
+  });
 });
