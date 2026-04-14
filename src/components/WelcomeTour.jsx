@@ -79,7 +79,7 @@ export function WelcomeTour({ onDismiss }) {
 
         {/* Tips */}
         <div className="px-6 pb-5">
-          <div className="bg-sand/60 rounded-xl p-4 space-y-2">
+          <div className="bg-sand/60 rounded-2xl p-4 space-y-2">
             <p className="text-xs font-display font-semibold text-ink/70 uppercase tracking-wide">
               Tips
             </p>
