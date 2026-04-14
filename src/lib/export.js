@@ -1,3 +1,5 @@
+import { DESIGN_TOKENS } from './colors';
+
 /**
  * Build CSV string from categorized values.
  */
@@ -26,16 +28,8 @@ export function buildJSONExport(state, timestamp) {
   };
 }
 
-// Design system colors
-const COLORS = {
-  ink: '#1b1b1b',
-  sand: '#f3efe6',
-  ember: '#e85d2f',
-  moss: '#436a5a',
-  sky: '#c9d6df',
-  cardBg: '#fafaf8',
-  bg: '#efede7',
-};
+// Re-export design tokens as COLORS for canvas rendering
+const COLORS = DESIGN_TOKENS;
 
 /**
  * Draw a rounded rectangle on a canvas context.

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
 import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
+import { CATEGORY_COLORS } from '../lib/colors';
 
 function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) {
   if (values.length === 0) return null;
@@ -118,9 +119,9 @@ export function ResultsPhase({ state, save, reset }) {
         y = doc.lastAutoTable.finalY + 15;
       };
 
-      addSection('Very Important Values', state.veryImportant, [232, 93, 47]);
-      addSection('Important Values', state.important, [67, 106, 90]);
-      addSection('Not Important Values', state.notImportant, [201, 214, 223]);
+      addSection('Very Important Values', state.veryImportant, CATEGORY_COLORS.veryImportant.rgb);
+      addSection('Important Values', state.important, CATEGORY_COLORS.important.rgb);
+      addSection('Not Important Values', state.notImportant, CATEGORY_COLORS.notImportant.rgb);
 
       doc.save('personal-values-results.pdf');
     } catch {
