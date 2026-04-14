@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw, Search, X } from 'lucide-react';
+import { ResetConfirmModal } from './ResetConfirmModal';
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
 import { sortValue, unsortValue, getRemainingValues } from '../lib/sorting';
@@ -241,31 +242,13 @@ export function SortingPhase({ state, save, reset }) {
         </button>
       </div>
 
-      {/* Reset confirmation modal */}
       {showResetConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="sorting-reset-title">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 max-w-sm w-full shadow-card">
-            <h3 id="sorting-reset-title" className="text-lg font-display font-semibold text-ink mb-2">Start Over?</h3>
-            <p className="text-sm text-ink/60 mb-6 font-body">
-              You&apos;ve categorized {sortedCount} value{sortedCount !== 1 ? 's' : ''}. This will clear all your progress and start from scratch.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                autoFocus
-                onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => { reset(); setShowResetConfirm(false); }}
-                className="px-4 py-2 text-sm font-medium text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors font-body"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-        </div>
+        <ResetConfirmModal
+          titleId="sorting-reset-title"
+          message={`You've categorized ${sortedCount} value${sortedCount !== 1 ? 's' : ''}. This will clear all your progress and start from scratch.`}
+          onConfirm={() => { reset(); setShowResetConfirm(false); }}
+          onCancel={() => setShowResetConfirm(false)}
+        />
       )}
     </div>
   );
