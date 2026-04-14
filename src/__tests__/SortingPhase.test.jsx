@@ -30,6 +30,7 @@ const localStorageMock = (() => {
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 import { SortingPhase } from '../components/SortingPhase';
+import { ALL_VALUES } from '../values';
 
 const makeValue = (id, name) => ({ id, name, description: `to do ${name.toLowerCase()}` });
 
@@ -113,6 +114,51 @@ describe('SortingPhase', () => {
   it('renders Proceed to Ranking button', () => {
     render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
     expect(screen.getByText('Proceed to Ranking')).toBeInTheDocument();
+  });
+
+  describe('sorting completion announcement', () => {
+    it('announces when all values are categorized', () => {
+      const partialState = {
+        phase: 1,
+        veryImportant: ALL_VALUES.slice(0, 40),
+        important: ALL_VALUES.slice(40, 80),
+        notImportant: ALL_VALUES.slice(80, 82), // 1 remaining
+      };
+      const { rerender } = render(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+
+      // No announcement yet
+      expect(screen.queryByText('All values categorized. You can now proceed to ranking.')).not.toBeInTheDocument();
+
+      // Complete the sorting
+      const completeState = {
+        phase: 1,
+        veryImportant: ALL_VALUES.slice(0, 40),
+        important: ALL_VALUES.slice(40, 80),
+        notImportant: ALL_VALUES.slice(80),
+      };
+      rerender(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+
+      expect(screen.getByText('All values categorized. You can now proceed to ranking.')).toBeInTheDocument();
+    });
+
+    it('does not announce when initially loaded with all sorted', () => {
+      const completeState = {
+        phase: 1,
+        veryImportant: ALL_VALUES.slice(0, 40),
+        important: ALL_VALUES.slice(40, 80),
+        notImportant: ALL_VALUES.slice(80),
+      };
+      render(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+
+      // Should not announce on initial load — only on transition
+      expect(screen.queryByText('All values categorized. You can now proceed to ranking.')).not.toBeInTheDocument();
+    });
   });
 
   describe('search in grid view', () => {

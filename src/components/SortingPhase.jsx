@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw, Search, X } from 'lucide-react';
 import { SingleCardView } from './SingleCardView';
@@ -22,6 +22,18 @@ export function SortingPhase({ state, save, reset }) {
   const remaining = getRemainingValues(state);
   const sortedCount =
     state.veryImportant.length + state.important.length + state.notImportant.length;
+
+  // Announce to screen readers when all values are categorized
+  const [sortingComplete, setSortingComplete] = useState(false);
+  const prevRemainingRef = useRef(remaining.length);
+  useEffect(() => {
+    if (remaining.length === 0 && prevRemainingRef.current > 0) {
+      setSortingComplete(true);
+    } else if (remaining.length > 0) {
+      setSortingComplete(false);
+    }
+    prevRemainingRef.current = remaining.length;
+  }, [remaining.length]);
 
   const handleSort = (valueId, category) => {
     const updates = sortValue(state, valueId, category);
@@ -207,6 +219,11 @@ export function SortingPhase({ state, save, reset }) {
           />
         </>
       )}
+
+      {/* Screen reader announcement for sorting completion */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {sortingComplete && 'All values categorized. You can now proceed to ranking.'}
+      </div>
 
       {/* Proceed button */}
       <div className="flex justify-center mt-4">
