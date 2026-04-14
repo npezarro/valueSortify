@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { ArrowDownWideNarrow, List, Trophy, LayoutGrid, CreditCard, Keyboard, ArrowRight } from 'lucide-react';
+import { useCallback } from 'react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const STORAGE_KEY = 'vs-onboarding-seen';
 
@@ -46,9 +48,11 @@ export function WelcomeTour({ onDismiss }) {
     markOnboardingSeen();
     onDismiss();
   };
+  const handleClose = useCallback(() => handleStart(), [onDismiss]);
+  const trapRef = useFocusTrap(handleClose);
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div ref={trapRef} className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl max-w-md w-full shadow-card overflow-hidden">
         {/* Header */}
         <div className="bg-sand px-6 pt-6 pb-4 text-center">
