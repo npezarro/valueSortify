@@ -43,6 +43,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      {/* Skip to content link (WCAG 2.4.1) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-full focus:bg-ember focus:text-white focus:font-body focus:text-sm focus:font-medium focus:shadow-card focus:outline-none"
+      >
+        Skip to content
+      </a>
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-black/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
@@ -78,7 +86,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 outline-none">
         {/* Phase instructions */}
         <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-5 mb-6 shadow-card">
           <div className="flex items-start gap-3">
