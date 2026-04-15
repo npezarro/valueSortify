@@ -14,7 +14,7 @@ export const ValueCard = forwardRef(function ValueCard({ value, onSort, showButt
       tabIndex={tabIndex}
       data-value-id={value.id}
       className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 md:p-4 shadow-card min-h-[80px] flex flex-col justify-center outline-none transition-all ${
-        focused ? 'border-ember ring-2 ring-ember/30' : 'border-black/5'
+        focused ? 'border-ember ring-2 ring-ember/30' : 'border-black/5 focus-visible:ring-2 focus-visible:ring-ember/30 focus-visible:border-ember'
       }`}
     >
       <div className="flex items-start gap-2">

@@ -247,7 +247,7 @@ export function ResultsPhase({ state, save, reset }) {
                   onClick={() => { exportCSV(); setShowExport(false); }}
                   role="menuitem"
                   tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
                 >
                   Export as CSV
                 </button>
@@ -256,7 +256,7 @@ export function ResultsPhase({ state, save, reset }) {
                   onClick={() => { exportPDF(); setShowExport(false); }}
                   role="menuitem"
                   tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
                 >
                   Export as PDF
                 </button>
@@ -265,7 +265,7 @@ export function ResultsPhase({ state, save, reset }) {
                   onClick={() => { exportImage(); setShowExport(false); }}
                   role="menuitem"
                   tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
                 >
                   Export as Image
                 </button>
@@ -274,7 +274,7 @@ export function ResultsPhase({ state, save, reset }) {
                   onClick={() => { exportJSON(); setShowExport(false); }}
                   role="menuitem"
                   tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none"
+                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
                 >
                   Export as JSON
                 </button>
