@@ -24,9 +24,11 @@ export function SortingPhase({ state, save, reset }) {
   const sortedCount =
     state.veryImportant.length + state.important.length + state.notImportant.length;
 
-  // Announce to screen readers when all values are categorized
+  // Announce to screen readers when all values are categorized.
+  // Tracks transition from remaining > 0 to remaining === 0.
   const [sortingComplete, setSortingComplete] = useState(false);
   const prevRemainingRef = useRef(remaining.length);
+  /* eslint-disable react-hooks/set-state-in-effect -- intentional: tracks remaining→0 transition for aria-live announcement */
   useEffect(() => {
     if (remaining.length === 0 && prevRemainingRef.current > 0) {
       setSortingComplete(true);
@@ -35,6 +37,7 @@ export function SortingPhase({ state, save, reset }) {
     }
     prevRemainingRef.current = remaining.length;
   }, [remaining.length]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleSort = (valueId, category) => {
     const updates = sortValue(state, valueId, category);

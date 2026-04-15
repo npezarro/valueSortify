@@ -44,12 +44,11 @@ const phases = [
 ];
 
 export function WelcomeTour({ onDismiss }) {
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     markOnboardingSeen();
     onDismiss();
-  };
-  const handleClose = useCallback(() => handleStart(), [onDismiss]);
-  const trapRef = useFocusTrap(handleClose);
+  }, [onDismiss]);
+  const trapRef = useFocusTrap(handleStart);
 
   return (
     <div ref={trapRef} className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
