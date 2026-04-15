@@ -161,6 +161,31 @@ export function SortingPhase({ state, save, reset }) {
         ))}
       </div>
 
+      {/* Progress bar */}
+      {sortedCount > 0 && (
+        <div
+          className="flex h-2 rounded-full overflow-hidden mb-6 bg-ink/5"
+          role="progressbar"
+          aria-valuenow={sortedCount}
+          aria-valuemin={0}
+          aria-valuemax={ALL_VALUES.length}
+          aria-label={`${sortedCount} of ${ALL_VALUES.length} values sorted`}
+        >
+          {categories.map(
+            (cat) =>
+              cat.items.length > 0 && (
+                <div
+                  key={cat.key}
+                  className={`${cat.color} transition-all duration-300`}
+                  style={{
+                    width: `${(cat.items.length / ALL_VALUES.length) * 100}%`,
+                  }}
+                />
+              ),
+          )}
+        </div>
+      )}
+
       {/* View-specific content */}
       {viewMode === 'card' ? (
         <SingleCardView unsortedValues={remaining} onSort={handleSort} onUndo={handleUndo} canUndo={undoHistory.length > 0} totalValues={ALL_VALUES.length} />
