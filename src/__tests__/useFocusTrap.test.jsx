@@ -53,7 +53,7 @@ describe('useFocusTrap', () => {
 
   it('does not wrap focus between middle elements', () => {
     render(<TestModal onClose={vi.fn()} />);
-    const first = screen.getByTestId('first');
+    const _first = screen.getByTestId('first');
     const second = screen.getByTestId('second');
     second.focus();
     fireEvent.keyDown(second, { key: 'Tab' });
