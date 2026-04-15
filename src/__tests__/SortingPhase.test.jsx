@@ -161,6 +161,70 @@ describe('SortingPhase', () => {
     });
   });
 
+  describe('progress bar', () => {
+    const getDistributionBar = () =>
+      screen.getByRole('progressbar', { name: /values sorted/ });
+    const queryDistributionBar = () =>
+      screen.queryByRole('progressbar', { name: /values sorted/ });
+
+    it('shows progress bar when values are sorted', () => {
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      expect(getDistributionBar()).toBeInTheDocument();
+    });
+
+    it('hides progress bar when nothing is sorted', () => {
+      const emptyState = { phase: 1, veryImportant: [], important: [], notImportant: [] };
+      render(<SortingPhase state={emptyState} save={vi.fn()} reset={vi.fn()} />);
+      expect(queryDistributionBar()).not.toBeInTheDocument();
+    });
+
+    it('displays correct aria values', () => {
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      const bar = getDistributionBar();
+      expect(bar).toHaveAttribute('aria-valuenow', '2');
+      expect(bar).toHaveAttribute('aria-valuemax', String(ALL_VALUES.length));
+      expect(bar).toHaveAttribute('aria-label', `2 of ${ALL_VALUES.length} values sorted`);
+    });
+
+    it('renders segments for non-empty categories only', () => {
+      // defaultState: veryImportant=1, important=1, notImportant=0
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      const bar = getDistributionBar();
+      const segments = bar.querySelectorAll('div');
+      // Only 2 segments — notImportant is empty so it's not rendered
+      expect(segments).toHaveLength(2);
+    });
+
+    it('renders all three segments when all categories have values', () => {
+      const fullState = {
+        phase: 1,
+        veryImportant: [makeValue(1, 'A')],
+        important: [makeValue(2, 'B')],
+        notImportant: [makeValue(3, 'C')],
+      };
+      render(<SortingPhase state={fullState} save={vi.fn()} reset={vi.fn()} />);
+      const bar = getDistributionBar();
+      const segments = bar.querySelectorAll('div');
+      expect(segments).toHaveLength(3);
+    });
+
+    it('segment widths reflect category proportions', () => {
+      const state = {
+        phase: 1,
+        veryImportant: ALL_VALUES.slice(0, 40),
+        important: ALL_VALUES.slice(40, 60),
+        notImportant: ALL_VALUES.slice(60, 70),
+      };
+      render(<SortingPhase state={state} save={vi.fn()} reset={vi.fn()} />);
+      const bar = getDistributionBar();
+      const segments = bar.querySelectorAll('div');
+      const total = ALL_VALUES.length;
+      expect(segments[0].style.width).toBe(`${(40 / total) * 100}%`);
+      expect(segments[1].style.width).toBe(`${(20 / total) * 100}%`);
+      expect(segments[2].style.width).toBe(`${(10 / total) * 100}%`);
+    });
+  });
+
   describe('search in grid view', () => {
     it('shows search input in grid view', async () => {
       const user = userEvent.setup();
