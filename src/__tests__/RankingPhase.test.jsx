@@ -102,6 +102,6 @@ describe('RankingPhase', () => {
 
   it('shows drag instruction text', () => {
     render(<RankingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
-    expect(screen.getAllByText(/Drag to reorder/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Drag or use arrow keys to reorder/).length).toBeGreaterThan(0);
   });
 });
