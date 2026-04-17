@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Reorder, AnimatePresence } from 'framer-motion';
 import { ResetConfirmModal } from './ResetConfirmModal';
@@ -13,6 +13,30 @@ const CATEGORIES = [
 ];
 
 function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) {
+  const announceRef = useRef(null);
+
+  const swapItems = useCallback((index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= values.length) return;
+    const newOrder = [...values];
+    [newOrder[index], newOrder[target]] = [newOrder[target], newOrder[index]];
+    onReorder(newOrder);
+
+    const name = values[index].name;
+    const newPos = target + 1;
+    if (announceRef.current) {
+      announceRef.current.textContent = `${name}, moved to position ${newPos} of ${values.length}`;
+    }
+
+    // Restore focus to the grip handle after React re-renders
+    requestAnimationFrame(() => {
+      const list = announceRef.current?.previousElementSibling;
+      if (!list) return;
+      const items = list.querySelectorAll('[aria-roledescription="sortable"]');
+      items[target]?.focus();
+    });
+  }, [values, onReorder]);
+
   if (values.length === 0) return null;
 
   const otherCategories = CATEGORIES.filter((c) => c.key !== categoryKey);
@@ -27,7 +51,7 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
         <span className="text-sm text-ink/40 ml-auto font-body">{values.length}</span>
       </div>
       <p className="text-xs text-ink/40 mb-4 font-body">
-        Drag to reorder, or use dots to move between categories
+        Drag or use arrow keys to reorder, dots to move between categories
       </p>
       <Reorder.Group
         axis="y"
@@ -35,10 +59,10 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
         onReorder={onReorder}
         className="space-y-2"
         role="list"
-        aria-label={`${title} values, drag to reorder`}
+        aria-label={`${title} values, drag or use arrow keys to reorder`}
       >
         <AnimatePresence>
-          {values.map((value) => (
+          {values.map((value, index) => (
             <DraggableCard
               key={value.id}
               value={value}
@@ -46,10 +70,15 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
               currentCategory={categoryKey}
               otherCategories={otherCategories}
               onMove={onMove}
+              onMoveUp={() => swapItems(index, -1)}
+              onMoveDown={() => swapItems(index, 1)}
+              position={index}
+              total={values.length}
             />
           ))}
         </AnimatePresence>
       </Reorder.Group>
+      <div ref={announceRef} aria-live="assertive" className="sr-only" />
     </div>
   );
 }
