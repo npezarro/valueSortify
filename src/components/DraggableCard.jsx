@@ -31,7 +31,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
           tabIndex={0}
           aria-label={`Drag to reorder ${value.name}`}
           onPointerDown={(e) => controls.start(e)}
-          className="cursor-grab active:cursor-grabbing touch-none text-ink/30 hover:text-ink/60 transition-colors mt-0.5 shrink-0"
+          className="cursor-grab active:cursor-grabbing touch-none text-ink/30 hover:text-ink/60 transition-colors mt-0.5 shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40"
         >
           <GripVertical size={16} aria-hidden="true" />
         </div>
@@ -52,7 +52,7 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
               <button
                 key={cat.key}
                 onClick={() => onMove(value.id, currentCategory, cat.key)}
-                className={`w-6 h-6 rounded-full ${cat.color} opacity-40 hover:opacity-100 hover:scale-110 transition-all flex items-center justify-center text-white text-[9px] font-bold leading-none`}
+                className={`w-6 h-6 rounded-full ${cat.color} opacity-40 hover:opacity-100 hover:scale-110 transition-all flex items-center justify-center text-white text-[9px] font-bold leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:opacity-100`}
                 aria-label={`Move ${value.name} to ${cat.label}`}
                 title={`Move to ${cat.label}`}
               >
