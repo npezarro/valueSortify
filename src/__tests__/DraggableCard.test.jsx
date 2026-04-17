@@ -105,4 +105,127 @@ describe('DraggableCard', () => {
     const { container } = render(<DraggableCard value={mockValue} />);
     expect(container.querySelector('.cursor-grab')).toBeInTheDocument();
   });
+
+  describe('keyboard reorder', () => {
+    it('shows position in aria-label when reorder props are provided', () => {
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={vi.fn()}
+          onMoveDown={vi.fn()}
+          position={0}
+          total={3}
+        />
+      );
+      expect(screen.getByLabelText('Reorder COURAGE, position 1 of 3. Use arrow keys to move')).toBeInTheDocument();
+    });
+
+    it('falls back to drag label without reorder props', () => {
+      render(<DraggableCard value={mockValue} />);
+      expect(screen.getByLabelText('Drag to reorder COURAGE')).toBeInTheDocument();
+    });
+
+    it('calls onMoveUp on ArrowUp keypress', async () => {
+      const user = userEvent.setup();
+      const onMoveUp = vi.fn();
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={onMoveUp}
+          onMoveDown={vi.fn()}
+          position={1}
+          total={3}
+        />
+      );
+      const grip = screen.getByLabelText(/Reorder COURAGE/);
+      grip.focus();
+      await user.keyboard('{ArrowUp}');
+      expect(onMoveUp).toHaveBeenCalledOnce();
+    });
+
+    it('calls onMoveDown on ArrowDown keypress', async () => {
+      const user = userEvent.setup();
+      const onMoveDown = vi.fn();
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={vi.fn()}
+          onMoveDown={onMoveDown}
+          position={0}
+          total={3}
+        />
+      );
+      const grip = screen.getByLabelText(/Reorder COURAGE/);
+      grip.focus();
+      await user.keyboard('{ArrowDown}');
+      expect(onMoveDown).toHaveBeenCalledOnce();
+    });
+
+    it('does not call onMoveUp when at first position', async () => {
+      const user = userEvent.setup();
+      const onMoveUp = vi.fn();
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={onMoveUp}
+          onMoveDown={vi.fn()}
+          position={0}
+          total={3}
+        />
+      );
+      const grip = screen.getByLabelText(/Reorder COURAGE/);
+      grip.focus();
+      await user.keyboard('{ArrowUp}');
+      expect(onMoveUp).not.toHaveBeenCalled();
+    });
+
+    it('does not call onMoveDown when at last position', async () => {
+      const user = userEvent.setup();
+      const onMoveDown = vi.fn();
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={vi.fn()}
+          onMoveDown={onMoveDown}
+          position={2}
+          total={3}
+        />
+      );
+      const grip = screen.getByLabelText(/Reorder COURAGE/);
+      grip.focus();
+      await user.keyboard('{ArrowDown}');
+      expect(onMoveDown).not.toHaveBeenCalled();
+    });
+
+    it('has sortable roledescription when reorder enabled', () => {
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={vi.fn()}
+          onMoveDown={vi.fn()}
+          position={0}
+          total={2}
+        />
+      );
+      const grip = screen.getByLabelText(/Reorder COURAGE/);
+      expect(grip).toHaveAttribute('aria-roledescription', 'sortable');
+    });
+
+    it('does not reorder with single item', async () => {
+      const user = userEvent.setup();
+      const onMoveUp = vi.fn();
+      const onMoveDown = vi.fn();
+      render(
+        <DraggableCard
+          value={mockValue}
+          onMoveUp={onMoveUp}
+          onMoveDown={onMoveDown}
+          position={0}
+          total={1}
+        />
+      );
+      // With total=1, falls back to drag label (no keyboard reorder)
+      expect(screen.getByLabelText('Drag to reorder COURAGE')).toBeInTheDocument();
+    });
+  });
 });

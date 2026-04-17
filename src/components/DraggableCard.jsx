@@ -1,10 +1,28 @@
+import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Reorder, useDragControls } from 'framer-motion';
 import { GripVertical } from 'lucide-react';
 
-export function DraggableCard({ value, colorDot, currentCategory, otherCategories, onMove }) {
+export function DraggableCard({ value, colorDot, currentCategory, otherCategories, onMove, onMoveUp, onMoveDown, position, total }) {
   const controls = useDragControls();
+  const gripRef = useRef(null);
   const hasMoveControls = currentCategory && otherCategories && onMove;
+  const hasKeyboardReorder = onMoveUp && onMoveDown && total > 1;
+
+  const handleKeyDown = (e) => {
+    if (!hasKeyboardReorder) return;
+    if (e.key === 'ArrowUp' && position > 0) {
+      e.preventDefault();
+      onMoveUp();
+    } else if (e.key === 'ArrowDown' && position < total - 1) {
+      e.preventDefault();
+      onMoveDown();
+    }
+  };
+
+  const positionLabel = hasKeyboardReorder
+    ? `Reorder ${value.name}, position ${position + 1} of ${total}. Use arrow keys to move`
+    : `Drag to reorder ${value.name}`;
 
   return (
     <Reorder.Item
@@ -27,10 +45,13 @@ export function DraggableCard({ value, colorDot, currentCategory, otherCategorie
     >
       <div className="flex items-start gap-2">
         <div
+          ref={gripRef}
           role="button"
           tabIndex={0}
-          aria-label={`Drag to reorder ${value.name}`}
+          aria-label={positionLabel}
+          aria-roledescription="sortable"
           onPointerDown={(e) => controls.start(e)}
+          onKeyDown={handleKeyDown}
           className="cursor-grab active:cursor-grabbing touch-none text-ink/30 hover:text-ink/60 transition-colors mt-0.5 shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40"
         >
           <GripVertical size={16} aria-hidden="true" />
@@ -82,4 +103,8 @@ DraggableCard.propTypes = {
     })
   ),
   onMove: PropTypes.func,
+  onMoveUp: PropTypes.func,
+  onMoveDown: PropTypes.func,
+  position: PropTypes.number,
+  total: PropTypes.number,
 };
