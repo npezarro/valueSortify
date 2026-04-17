@@ -212,7 +212,6 @@ describe('DraggableCard', () => {
     });
 
     it('does not reorder with single item', async () => {
-      const user = userEvent.setup();
       const onMoveUp = vi.fn();
       const onMoveDown = vi.fn();
       render(
