@@ -24,9 +24,19 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(-4px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'check-draw': {
+          '0%': { 'stroke-dashoffset': '24' },
+          '100%': { 'stroke-dashoffset': '0' },
+        },
+        'celebrate-in': {
+          '0%': { opacity: '0', transform: 'scale(0.9) translateY(8px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.2s ease-out',
+        'check-draw': 'check-draw 0.4s ease-out 0.2s forwards',
+        'celebrate-in': 'celebrate-in 0.4s ease-out',
       },
     },
   },

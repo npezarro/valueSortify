@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw, Search, X } from 'lucide-react';
+import { ArrowRight, Layers, LayoutGrid, CreditCard, RotateCcw, Search, X, Check } from 'lucide-react';
 import { ResetConfirmModal } from './ResetConfirmModal';
 import { SingleCardView } from './SingleCardView';
 import { GridView } from './GridView';
@@ -27,17 +27,27 @@ export function SortingPhase({ state, save, reset }) {
   // Announce to screen readers when all values are categorized.
   // Tracks transition from remaining > 0 to remaining === 0.
   const [sortingComplete, setSortingComplete] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const prevRemainingRef = useRef(remaining.length);
   /* eslint-disable react-hooks/set-state-in-effect -- intentional: tracks remaining→0 transition for aria-live announcement */
   useEffect(() => {
     if (remaining.length === 0 && prevRemainingRef.current > 0) {
       setSortingComplete(true);
+      setShowCelebration(true);
     } else if (remaining.length > 0) {
       setSortingComplete(false);
+      setShowCelebration(false);
     }
     prevRemainingRef.current = remaining.length;
   }, [remaining.length]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Auto-dismiss celebration after 4 seconds
+  useEffect(() => {
+    if (!showCelebration) return;
+    const timer = setTimeout(() => setShowCelebration(false), 4000);
+    return () => clearTimeout(timer);
+  }, [showCelebration]);
 
   const handleSort = (valueId, category) => {
     const updates = sortValue(state, valueId, category);
@@ -186,6 +196,29 @@ export function SortingPhase({ state, save, reset }) {
         </div>
       )}
 
+      {/* Completion celebration */}
+      {showCelebration && (
+        <div
+          className="flex items-center gap-3 mb-6 px-4 py-3 bg-white/80 backdrop-blur-sm border border-ember/20 rounded-2xl animate-celebrate-in"
+          role="status"
+        >
+          <div className="flex-shrink-0 w-8 h-8 bg-ember rounded-full flex items-center justify-center">
+            <Check size={18} className="text-white" strokeWidth={3} aria-hidden="true" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-ink font-body">Sorting complete!</p>
+            <p className="text-xs text-ink/50 font-body">Ready to rank your top priorities</p>
+          </div>
+          <button
+            onClick={() => setShowCelebration(false)}
+            aria-label="Dismiss"
+            className="ml-auto text-ink/30 hover:text-ink/50 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {/* View-specific content */}
       {viewMode === 'card' ? (
         <SingleCardView unsortedValues={remaining} onSort={handleSort} onUndo={handleUndo} canUndo={undoHistory.length > 0} totalValues={ALL_VALUES.length} />
@@ -261,7 +294,7 @@ export function SortingPhase({ state, save, reset }) {
           disabled={!canProceed}
           className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all font-body ${
             canProceed
-              ? 'bg-ember text-white hover:bg-ember/90 shadow-card'
+              ? `bg-ember text-white hover:bg-ember/90 shadow-card${showCelebration ? ' animate-pulse' : ''}`
               : 'bg-sky/50 text-ink/30 cursor-not-allowed'
           }`}
         >

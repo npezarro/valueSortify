@@ -161,6 +161,81 @@ describe('SortingPhase', () => {
     });
   });
 
+  describe('completion celebration', () => {
+    const partialState = {
+      phase: 1,
+      veryImportant: ALL_VALUES.slice(0, 40),
+      important: ALL_VALUES.slice(40, 80),
+      notImportant: ALL_VALUES.slice(80, 82), // 1 remaining
+    };
+    const completeState = {
+      phase: 1,
+      veryImportant: ALL_VALUES.slice(0, 40),
+      important: ALL_VALUES.slice(40, 80),
+      notImportant: ALL_VALUES.slice(80),
+    };
+
+    it('shows celebration banner on completion transition', () => {
+      const { rerender } = render(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.queryByText('Sorting complete!')).not.toBeInTheDocument();
+
+      rerender(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.getByText('Sorting complete!')).toBeInTheDocument();
+      expect(screen.getByText('Ready to rank your top priorities')).toBeInTheDocument();
+    });
+
+    it('does not show celebration on initial load with all sorted', () => {
+      render(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.queryByText('Sorting complete!')).not.toBeInTheDocument();
+    });
+
+    it('dismisses celebration when dismiss button clicked', async () => {
+      const user = userEvent.setup();
+      const { rerender } = render(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+      rerender(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.getByText('Sorting complete!')).toBeInTheDocument();
+
+      await user.click(screen.getByLabelText('Dismiss'));
+      expect(screen.queryByText('Sorting complete!')).not.toBeInTheDocument();
+    });
+
+    it('celebration has status role for assistive tech', () => {
+      const { rerender } = render(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+      rerender(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.getByRole('status')).toBeInTheDocument();
+    });
+
+    it('clears celebration when value is unsorted', () => {
+      const { rerender } = render(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+      rerender(
+        <SortingPhase state={completeState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.getByText('Sorting complete!')).toBeInTheDocument();
+
+      // Unsort one value
+      rerender(
+        <SortingPhase state={partialState} save={vi.fn()} reset={vi.fn()} />
+      );
+      expect(screen.queryByText('Sorting complete!')).not.toBeInTheDocument();
+    });
+  });
+
   describe('progress bar', () => {
     const getDistributionBar = () =>
       screen.getByRole('progressbar', { name: /values sorted/ });
