@@ -169,6 +169,14 @@ describe('ResultsPhase', () => {
     expect(document.activeElement).toHaveTextContent('Export as JSON');
   });
 
+  it('shows keyboard shortcut hints in export dropdown', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    expect(screen.getByText(/Navigate/)).toBeInTheDocument();
+    expect(screen.getByText(/Esc Close/)).toBeInTheDocument();
+  });
+
   it('Escape closes the export menu and returns focus to trigger', async () => {
     const user = userEvent.setup();
     render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);

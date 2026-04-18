@@ -50,13 +50,23 @@ describe('RankingPhase', () => {
     expect(screen.getByText('2')).toBeInTheDocument();
   });
 
-  it('hides empty groups', () => {
+  it('shows empty-state guidance for empty groups', () => {
     const state = { ...defaultState, notImportant: [] };
     render(<RankingPhase state={state} save={vi.fn()} reset={vi.fn()} />);
-    // Only "Very Important" and "Important" headings should exist (in RankingGroup)
-    // "Not Important" heading should not render
-    const headings = screen.queryAllByText('Not Important');
-    expect(headings).toHaveLength(0);
+    // Empty group still renders with its heading
+    expect(screen.getByText('Not Important')).toBeInTheDocument();
+    // Shows helpful guidance text
+    expect(screen.getByText(/No values in this category/)).toBeInTheDocument();
+    // Shows 0 count
+    expect(screen.getByText('0')).toBeInTheDocument();
+  });
+
+  it('does not show drag instructions for empty groups', () => {
+    const state = { ...defaultState, notImportant: [] };
+    render(<RankingPhase state={state} save={vi.fn()} reset={vi.fn()} />);
+    // Only 2 groups have drag instructions (veryImportant and important)
+    const instructions = screen.getAllByText(/Drag or use arrow keys to reorder/);
+    expect(instructions).toHaveLength(2);
   });
 
   it('calls save with phase 1 on Back to Sorting click', async () => {
