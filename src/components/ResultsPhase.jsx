@@ -278,6 +278,11 @@ export function ResultsPhase({ state, save, reset }) {
                 >
                   Export as JSON
                 </button>
+                <div className="border-t border-black/5 mx-3 mt-1 pt-1.5 pb-1" aria-hidden="true">
+                  <p className="text-[10px] text-ink/30 font-body text-center">
+                    ↑↓ Navigate · Enter Select · Esc Close
+                  </p>
+                </div>
               </div>
             )}
           </div>

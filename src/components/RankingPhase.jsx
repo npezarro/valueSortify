@@ -37,9 +37,24 @@ function RankingGroup({ title, color, categoryKey, values, onReorder, onMove }) 
     });
   }, [values, onReorder]);
 
-  if (values.length === 0) return null;
-
   const otherCategories = CATEGORIES.filter((c) => c.key !== categoryKey);
+
+  if (values.length === 0) {
+    return (
+      <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-4 md:p-6 shadow-card opacity-60">
+        <div className="flex items-center gap-2 mb-4">
+          <div className={`w-4 h-4 ${color} rounded`} aria-hidden="true" />
+          <h3 className="text-base md:text-lg font-display font-medium text-ink">
+            {title}
+          </h3>
+          <span className="text-sm text-ink/40 ml-auto font-body">0</span>
+        </div>
+        <p className="text-sm text-ink/40 font-body text-center py-6">
+          No values in this category. Move values here from other categories using the colored dots, or go back to sorting to recategorize.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-4 md:p-6 shadow-card">
