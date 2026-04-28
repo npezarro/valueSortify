@@ -35,21 +35,21 @@ export const ValueCard = forwardRef(function ValueCard({ value, onSort, showButt
           <button
             onClick={() => onSort(value.id, 'veryImportant')}
             aria-label={`Sort ${value.name} as Very Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-ember/10 text-ember border border-ember/20 hover:bg-ember/20 transition-colors font-medium font-body"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-ember/10 text-ember border border-ember/20 hover:bg-ember/20 transition-colors font-medium font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40"
           >
             Very Important
           </button>
           <button
             onClick={() => onSort(value.id, 'important')}
             aria-label={`Sort ${value.name} as Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-moss/10 text-moss border border-moss/20 hover:bg-moss/20 transition-colors font-medium font-body"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-moss/10 text-moss border border-moss/20 hover:bg-moss/20 transition-colors font-medium font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss/40"
           >
             Important
           </button>
           <button
             onClick={() => onSort(value.id, 'notImportant')}
             aria-label={`Sort ${value.name} as Not Important`}
-            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-sky/30 text-ink/50 border border-sky/50 hover:bg-sky/50 transition-colors font-medium font-body"
+            className="flex-1 text-xs py-1.5 px-2 rounded-full bg-sky/30 text-ink/50 border border-sky/50 hover:bg-sky/50 transition-colors font-medium font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30"
           >
             Not Important
           </button>

@@ -110,7 +110,7 @@ export function WelcomeTour({ onDismiss }) {
           <button
             autoFocus
             onClick={handleStart}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-ember text-white rounded-full font-medium text-sm hover:bg-ember/90 transition-colors shadow-card font-body"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-ember text-white rounded-full font-medium text-sm hover:bg-ember/90 transition-colors shadow-card font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
           >
             Let&apos;s Start
             <ArrowRight size={16} aria-hidden="true" />

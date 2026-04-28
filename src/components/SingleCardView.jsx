@@ -144,7 +144,7 @@ export function SingleCardView({ unsortedValues, onSort, onUndo, canUndo, totalV
         <button
           onClick={() => handleSort('veryImportant')}
           aria-label="Sort as Very Important (keyboard shortcut Q)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-ember/10 text-ember border-2 border-ember/20 hover:bg-ember/20 hover:border-ember/40 transition-all font-medium font-body active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-ember/10 text-ember border-2 border-ember/20 hover:bg-ember/20 hover:border-ember/40 transition-all font-medium font-body active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
         >
           <span className="text-sm md:text-base">Very Important</span>
           <kbd className="text-[10px] md:text-xs bg-ember/20 text-ember px-1.5 py-0.5 rounded font-mono">
@@ -154,7 +154,7 @@ export function SingleCardView({ unsortedValues, onSort, onUndo, canUndo, totalV
         <button
           onClick={() => handleSort('important')}
           aria-label="Sort as Important (keyboard shortcut W)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-moss/10 text-moss border-2 border-moss/20 hover:bg-moss/20 hover:border-moss/40 transition-all font-medium font-body active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-moss/10 text-moss border-2 border-moss/20 hover:bg-moss/20 hover:border-moss/40 transition-all font-medium font-body active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss/40 focus-visible:ring-offset-2"
         >
           <span className="text-sm md:text-base">Important</span>
           <kbd className="text-[10px] md:text-xs bg-moss/20 text-moss px-1.5 py-0.5 rounded font-mono">
@@ -164,7 +164,7 @@ export function SingleCardView({ unsortedValues, onSort, onUndo, canUndo, totalV
         <button
           onClick={() => handleSort('notImportant')}
           aria-label="Sort as Not Important (keyboard shortcut E)"
-          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-sky/30 text-ink/50 border-2 border-sky/50 hover:bg-sky/50 hover:border-sky/70 transition-all font-medium font-body active:scale-95"
+          className="flex flex-col items-center gap-1 py-3 px-4 rounded-full bg-sky/30 text-ink/50 border-2 border-sky/50 hover:bg-sky/50 hover:border-sky/70 transition-all font-medium font-body active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2"
         >
           <span className="text-sm md:text-base">Not Important</span>
           <kbd className="text-[10px] md:text-xs bg-sky/50 text-ink/60 px-1.5 py-0.5 rounded font-mono">
@@ -177,7 +177,7 @@ export function SingleCardView({ unsortedValues, onSort, onUndo, canUndo, totalV
       {canUndo && (
         <button
           onClick={onUndo}
-          className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
+          className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           aria-label="Undo last sort (keyboard shortcut Z)"
         >
           <Undo2 size={14} aria-hidden="true" />

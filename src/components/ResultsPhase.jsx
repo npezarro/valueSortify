@@ -216,14 +216,14 @@ export function ResultsPhase({ state, save, reset }) {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => save({ phase: 2 })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           >
             <ArrowLeft size={16} aria-hidden="true" />
             Back to Ranking
           </button>
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           >
             <RotateCcw size={16} aria-hidden="true" />
             Start Over
@@ -234,7 +234,7 @@ export function ResultsPhase({ state, save, reset }) {
               onClick={() => setShowExport(!showExport)}
               aria-expanded={showExport}
               aria-haspopup="true"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ember text-white hover:bg-ember/80 shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ember text-white hover:bg-ember/80 shadow-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
             >
               <Download size={16} aria-hidden="true" />
               Export

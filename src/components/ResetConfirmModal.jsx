@@ -21,13 +21,13 @@ export function ResetConfirmModal({ titleId, message, onConfirm, onCancel }) {
           <button
             autoFocus
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body"
+            className="px-4 py-2 text-sm font-medium text-ink/70 bg-white border border-black/5 rounded-full hover:bg-sand transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-sm font-medium text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors font-body"
+            className="px-4 py-2 text-sm font-medium text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/40 focus-visible:ring-offset-2"
           >
             Reset
           </button>

@@ -106,7 +106,7 @@ export function SortingPhase({ state, save, reset }) {
         {sortedCount > 0 ? (
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 rounded-full"
             title="Start over"
           >
             <RotateCcw size={14} aria-hidden="true" />
@@ -117,7 +117,7 @@ export function SortingPhase({ state, save, reset }) {
         )}
         <button
           onClick={toggleView}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/60 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full hover:bg-white transition-colors font-body"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/60 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full hover:bg-white transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           aria-label={viewMode === 'card' ? 'Switch to grid view' : 'Switch to card view'}
           title={viewMode === 'card' ? 'Switch to grid view' : 'Switch to card view'}
         >
@@ -146,7 +146,7 @@ export function SortingPhase({ state, save, reset }) {
             }}
             aria-label={`${cat.label}: ${cat.items.length} values`}
             aria-pressed={viewMode === 'grid' ? filter === cat.key : undefined}
-            className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 text-center transition-all ${
+            className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 ${
               viewMode === 'grid' && filter === cat.key
                 ? 'border-ink shadow-card'
                 : 'border-black/5 hover:border-black/10'
@@ -206,7 +206,7 @@ export function SortingPhase({ state, save, reset }) {
               <button
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink/60 transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
               >
                 <X size={14} />
               </button>
@@ -230,7 +230,7 @@ export function SortingPhase({ state, save, reset }) {
             {filter !== 'remaining' && (
               <button
                 onClick={() => setFilter('remaining')}
-                className="text-sm text-ember hover:text-ember/80 font-medium font-body"
+                className="text-sm text-ember hover:text-ember/80 font-medium font-body rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40"
               >
                 Show unsorted
               </button>
@@ -261,7 +261,7 @@ export function SortingPhase({ state, save, reset }) {
           disabled={!canProceed}
           className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all font-body ${
             canProceed
-              ? 'bg-ember text-white hover:bg-ember/90 shadow-card'
+              ? 'bg-ember text-white hover:bg-ember/90 shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2'
               : 'bg-sky/50 text-ink/30 cursor-not-allowed'
           }`}
         >
