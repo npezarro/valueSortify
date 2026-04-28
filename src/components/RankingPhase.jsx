@@ -100,7 +100,7 @@ export function RankingPhase({ state, save, reset }) {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowResetConfirm(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink/40 hover:text-ink/60 transition-colors font-body rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
           title="Start over"
         >
           <RotateCcw size={14} aria-hidden="true" />
@@ -125,14 +125,14 @@ export function RankingPhase({ state, save, reset }) {
       <div className="flex justify-center gap-4">
         <button
           onClick={() => save({ phase: 1 })}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm bg-white/80 backdrop-blur-sm border border-black/5 text-ink/70 hover:bg-white transition-colors font-body"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm bg-white/80 backdrop-blur-sm border border-black/5 text-ink/70 hover:bg-white transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
         >
           <ArrowLeft size={16} aria-hidden="true" />
           Back to Sorting
         </button>
         <button
           onClick={() => save({ phase: 3 })}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm bg-ember text-white hover:bg-ember/90 shadow-card transition-colors font-body"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm bg-ember text-white hover:bg-ember/90 shadow-card transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
         >
           <Trophy size={16} aria-hidden="true" />
           View Results

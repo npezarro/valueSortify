@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component {
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm bg-ember text-white hover:bg-ember/90 shadow-card transition-colors font-body"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm bg-ember text-white hover:bg-ember/90 shadow-card transition-colors font-body focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
             >
               <RotateCcw size={16} aria-hidden="true" />
               Reload Page
