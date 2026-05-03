@@ -4,8 +4,7 @@ Last Updated: 2026-03-11 — Added reset button and cross-category card movement
 ## Current State
 
 - **What works**: All three phases functional. Sorting, ranking (drag reorder + cross-category moves), results with PDF/CSV/JSON export. Reset/Start Over available in all phases with confirmation dialog.
-- **What's deployed**: Built assets copied to `/var/www/pezant-tools/Example Projects/ValueSortify/` and served via pezant-tools PM2 process
-- **Live URL**: https://pezant.ca/tools/ValueSortify/
+- **What's deployed**: Built assets served via pezant-tools (see privateContext/infrastructure.md)
 - **Key features**: Single-card view (default) with Q/W/E hotkeys for fast sorting, grid view toggle, cross-category card movement via colored dot buttons in ranking phase
 
 ## Architecture
@@ -19,7 +18,7 @@ Last Updated: 2026-03-11 — Added reset button and cross-category card movement
 
 ### Deploy Contract
 
-Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Projects/ValueSortify/`. The pezant-tools server injects SEO tags, nav bar, and Wouter routing patches. A GitHub Action could automate this but manual copy works for now.
+Build produces `dist/` which is copied to the pezant-tools deploy target (see privateContext/infrastructure.md). The pezant-tools server injects SEO tags, nav bar, and Wouter routing patches. A GitHub Action could automate this but manual copy works for now.
 
 ### Component Structure
 
@@ -47,8 +46,7 @@ Build produces `dist/` which must be copied to `/var/www/pezant-tools/Example Pr
 
 ## Environment Notes
 
-- **Deploy target**: `/var/www/pezant-tools/Example Projects/ValueSortify/`
-- **PM2 process**: `pezant-tools` on port 3003 (serves the app)
+- **Deploy details**: see privateContext/infrastructure.md (pezant-tools row)
 - **Build command**: `npm run build` in this repo
 
 ## Active Branch
