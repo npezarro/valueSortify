@@ -46,9 +46,45 @@ describe('SortingPhase', () => {
 
   it('renders category counters', () => {
     render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
-    expect(screen.getByLabelText('Very Important: 1 values')).toBeInTheDocument();
-    expect(screen.getByLabelText('Important: 1 values')).toBeInTheDocument();
-    expect(screen.getByLabelText('Not Important: 0 values')).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Very Important: 1 values/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Important: 1 values/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Not Important: 0 values/)).toBeInTheDocument();
+  });
+
+  describe('category counter card-mode a11y', () => {
+    it('disables category counters in card mode (removes from tab order)', () => {
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      const veryImportant = screen.getByLabelText(/^Very Important: 1 values/);
+      expect(veryImportant).toBeDisabled();
+      expect(veryImportant).not.toHaveAttribute('aria-pressed');
+    });
+
+    it('exposes informational aria-label and title in card mode', () => {
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      const veryImportant = screen.getByLabelText(
+        'Very Important: 1 values (switch to grid view to filter)',
+      );
+      expect(veryImportant).toHaveAttribute('title', 'Switch to grid view to filter by category');
+    });
+
+    it('enables category counters in grid mode with aria-pressed state', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      const veryImportant = screen.getByLabelText('Very Important: 1 values');
+      expect(veryImportant).not.toBeDisabled();
+      expect(veryImportant).toHaveAttribute('aria-pressed', 'false');
+      expect(veryImportant).not.toHaveAttribute('title');
+    });
+
+    it('toggles aria-pressed when category counter is clicked in grid mode', async () => {
+      const user = userEvent.setup();
+      render(<SortingPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      await user.click(screen.getByLabelText('Switch to grid view'));
+      const veryImportant = screen.getByLabelText('Very Important: 1 values');
+      await user.click(veryImportant);
+      expect(veryImportant).toHaveAttribute('aria-pressed', 'true');
+    });
   });
 
   it('shows view toggle button', () => {
