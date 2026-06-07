@@ -137,20 +137,29 @@ export function SortingPhase({ state, save, reset }) {
 
       {/* Category counters */}
       <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6">
-        {categories.map((cat) => (
+        {categories.map((cat) => {
+          const isCardMode = viewMode === 'card';
+          return (
           <button
             key={cat.key}
+            type="button"
             onClick={() => {
-              if (viewMode === 'card') return;
+              if (isCardMode) return;
               setFilter(filter === cat.key ? 'remaining' : cat.key);
             }}
-            aria-label={`${cat.label}: ${cat.items.length} values`}
-            aria-pressed={viewMode === 'grid' ? filter === cat.key : undefined}
-            className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 ${
-              viewMode === 'grid' && filter === cat.key
+            disabled={isCardMode}
+            aria-label={
+              isCardMode
+                ? `${cat.label}: ${cat.items.length} values (switch to grid view to filter)`
+                : `${cat.label}: ${cat.items.length} values`
+            }
+            aria-pressed={isCardMode ? undefined : filter === cat.key}
+            title={isCardMode ? 'Switch to grid view to filter by category' : undefined}
+            className={`bg-white/80 backdrop-blur-sm border rounded-2xl p-3 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 disabled:cursor-default ${
+              !isCardMode && filter === cat.key
                 ? 'border-ink shadow-card'
                 : 'border-black/5 hover:border-black/10'
-            } ${viewMode === 'card' ? 'cursor-default' : ''}`}
+            }`}
           >
             <div className={`w-3 h-3 ${cat.color} rounded-full mx-auto mb-2`} aria-hidden="true" />
             <p className="text-xs md:text-sm font-medium text-ink font-body">
@@ -158,7 +167,8 @@ export function SortingPhase({ state, save, reset }) {
             </p>
             <p className="text-lg font-display font-bold text-ink">{cat.items.length}</p>
           </button>
-        ))}
+          );
+        })}
       </div>
 
       {/* Progress bar */}
