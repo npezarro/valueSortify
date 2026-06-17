@@ -9,13 +9,35 @@ const DEFAULT_STATE = {
   notImportant: [],
 };
 
+/**
+ * Normalize a parsed session object against the current schema.
+ *
+ * JSON.parse can succeed on a structurally invalid session (an older schema
+ * missing a category, a manual edit, a truncated write, or a non-object), and
+ * the raw result was previously trusted as-is. A missing category array then
+ * crashes the app on the first `state.<category>.length`/`.filter` access
+ * (e.g. App.jsx render). Coerce every field back to a valid value so stale or
+ * corrupt sessions degrade gracefully instead of breaking silently.
+ */
+function normalizeState(parsed) {
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    return { ...DEFAULT_STATE };
+  }
+  return {
+    phase: Number.isInteger(parsed.phase) ? parsed.phase : DEFAULT_STATE.phase,
+    veryImportant: Array.isArray(parsed.veryImportant) ? parsed.veryImportant : [],
+    important: Array.isArray(parsed.important) ? parsed.important : [],
+    notImportant: Array.isArray(parsed.notImportant) ? parsed.notImportant : [],
+  };
+}
+
 export function useLocalStorage() {
   const [state, setState] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
+      if (stored) return normalizeState(JSON.parse(stored));
     } catch { /* localStorage may be unavailable */ }
-    return DEFAULT_STATE;
+    return { ...DEFAULT_STATE };
   });
 
   const [justSaved, setJustSaved] = useState(false);
