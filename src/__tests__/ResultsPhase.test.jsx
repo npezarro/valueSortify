@@ -112,6 +112,24 @@ describe('ResultsPhase', () => {
     expect(ones.length).toBeGreaterThanOrEqual(3); // one per group
   });
 
+  it('shows a format description under each export option', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    expect(screen.getByText('Spreadsheet (Excel, Sheets)')).toBeInTheDocument();
+    expect(screen.getByText('Formatted, printable document')).toBeInTheDocument();
+    expect(screen.getByText('Shareable PNG snapshot')).toBeInTheDocument();
+    expect(screen.getByText('Raw data for backup')).toBeInTheDocument();
+  });
+
+  it('includes the format description in each menu item accessible name', async () => {
+    const user = userEvent.setup();
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    const csvItem = screen.getByRole('menuitem', { name: /Export as CSV/ });
+    expect(csvItem).toHaveAccessibleName(/Spreadsheet/);
+  });
+
   // ── Export menu keyboard navigation (WCAG 2.1.1) ──
 
   it('focuses first menu item when export dropdown opens', async () => {
