@@ -175,6 +175,14 @@ export function ResultsPhase({ state, save, reset }) {
     URL.revokeObjectURL(url);
   };
 
+  // Order is significant: menuItemsRef indices and keyboard nav tests rely on it.
+  const exportOptions = [
+    { label: 'Export as CSV', description: 'Spreadsheet (Excel, Sheets)', handler: exportCSV },
+    { label: 'Export as PDF', description: 'Formatted, printable document', handler: exportPDF },
+    { label: 'Export as Image', description: 'Shareable PNG snapshot', handler: exportImage },
+    { label: 'Export as JSON', description: 'Raw data for backup', handler: exportJSON },
+  ];
+
   return (
     <div>
       <div className="bg-card backdrop-blur-sm border border-black/5 rounded-2xl p-6 mb-8 shadow-card">
@@ -241,43 +249,20 @@ export function ResultsPhase({ state, save, reset }) {
               <ChevronDown size={14} aria-hidden="true" />
             </button>
             {showExport && (
-              <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
-                <button
-                  ref={(el) => setMenuItemRef(el, 0)}
-                  onClick={() => { exportCSV(); setShowExport(false); }}
-                  role="menuitem"
-                  tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
-                >
-                  Export as CSV
-                </button>
-                <button
-                  ref={(el) => setMenuItemRef(el, 1)}
-                  onClick={() => { exportPDF(); setShowExport(false); }}
-                  role="menuitem"
-                  tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
-                >
-                  Export as PDF
-                </button>
-                <button
-                  ref={(el) => setMenuItemRef(el, 2)}
-                  onClick={() => { exportImage(); setShowExport(false); }}
-                  role="menuitem"
-                  tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
-                >
-                  Export as Image
-                </button>
-                <button
-                  ref={(el) => setMenuItemRef(el, 3)}
-                  onClick={() => { exportJSON(); setShowExport(false); }}
-                  role="menuitem"
-                  tabIndex={-1}
-                  className="w-full text-left px-4 py-2 text-sm font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
-                >
-                  Export as JSON
-                </button>
+              <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
+                {exportOptions.map((opt, i) => (
+                  <button
+                    key={opt.label}
+                    ref={(el) => setMenuItemRef(el, i)}
+                    onClick={() => { opt.handler(); setShowExport(false); }}
+                    role="menuitem"
+                    tabIndex={-1}
+                    className="w-full text-left px-4 py-2 font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
+                  >
+                    <span className="block text-sm">{opt.label}</span>
+                    <span className="block text-xs text-ink/40">{opt.description}</span>
+                  </button>
+                ))}
               </div>
             )}
           </div>
