@@ -48,3 +48,15 @@ GitHub Actions (`.github/workflows/ci.yml`) — Node 22, npm ci, lint, test, bui
 - **localStorage key:** `valuesortify-session`. If the schema changes, bump the key or add a migration in `useLocalStorage.js` — old sessions will break silently otherwise.
 - **Session normalization:** `normalizeState()` in `useLocalStorage.js` coerces stored session data on load — missing category arrays default to `[]`, non-integer phase defaults to `1`, non-object values fall back to `DEFAULT_STATE`. When adding new schema fields, update `normalizeState()` to handle them; otherwise new fields will be silently dropped on load.
 - **Export menu option order:** The `exportOptions` array in `ResultsPhase.jsx` (CSV, PDF, Image, JSON) is order-significant — `menuItemsRef` indices and keyboard navigation tests rely on it. Reordering breaks tests.
+
+## Cross-Cutting Rules (added 2026-06-27)
+
+Synced from `~/repos/agentGuidance/guidance/testing.md` for the testing/CI concerns that apply to this repo (Vitest suite in `src/__tests__/` + GitHub Actions CI). The Stack/CI/Commands sections above already note Vitest and Node 22 CI; these add the rules that protect the suite.
+
+### Testing & CI (testing.md)
+
+- **Pin Node.js to 22 in CI** (current LTS). Don't use `node-version: 'lts/*'` — it can shift unexpectedly. Node 20 reached EOL on 2026-04-30. (CI already pins 22; keep it.)
+- **`package-lock.json` must be committed** for `npm ci` + `cache: npm` to work in GitHub Actions. If it lands in `.gitignore`, the cache step fails and `npm ci` refuses to run.
+- **Test glob quoting on GitHub Actions:** Single-quoted globs like `'src/**/*.test.js'` do NOT expand on GHA (`globstar` is off by default). Use a flat glob or let Vitest find tests via its config (the current `npm run test` → `vitest run` relies on config discovery — keep it).
+- **Mock at boundaries** (localStorage, DOM APIs, timers, jsPDF/export libs) — not the unit under test. Reset mocks between tests with `beforeEach(() => vi.clearAllMocks())`.
+- **Write a regression test for every bug fix** — one that fails without the fix and passes with it. Co-locate new tests in `src/__tests__/` following the existing `*.test.js`/`*.test.jsx` convention.
