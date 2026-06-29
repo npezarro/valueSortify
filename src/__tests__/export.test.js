@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
+import { buildCSV, buildJSONExport, buildImageBlob, buildPlainText } from '../lib/export';
 
 const v1 = { id: 1, name: 'ACCEPTANCE', description: 'to be accepted as I am' };
 const v2 = { id: 2, name: 'ACCURACY', description: 'to be accurate in my opinions and beliefs' };
@@ -110,6 +110,48 @@ describe('buildJSONExport', () => {
   it('has exactly four keys', () => {
     const result = buildJSONExport(emptyState, '2026-01-01T00:00:00.000Z');
     expect(Object.keys(result)).toEqual(['veryImportant', 'important', 'notImportant', 'timestamp']);
+  });
+});
+
+describe('buildPlainText', () => {
+  it('includes a heading', () => {
+    const text = buildPlainText(emptyState);
+    expect(text).toContain('My Personal Values');
+  });
+
+  it('lists ranked values under each non-empty category', () => {
+    const state = {
+      veryImportant: [v1, v2],
+      important: [v3],
+      notImportant: [],
+    };
+    const text = buildPlainText(state);
+    expect(text).toContain('Very Important');
+    expect(text).toContain('1. ACCEPTANCE - to be accepted as I am');
+    expect(text).toContain('2. ACCURACY - to be accurate in my opinions and beliefs');
+    expect(text).toContain('Important');
+    expect(text).toContain('1. ACHIEVEMENT - to have important accomplishments');
+  });
+
+  it('omits categories with no values', () => {
+    const state = { veryImportant: [v1], important: [], notImportant: [] };
+    const text = buildPlainText(state);
+    expect(text).toContain('Very Important');
+    expect(text).not.toContain('Not Important');
+  });
+
+  it('ranks values within a category starting at 1', () => {
+    const state = { veryImportant: [v1, v2, v3], important: [], notImportant: [] };
+    const lines = buildPlainText(state).split('\n');
+    expect(lines.some((l) => l.startsWith('1. ACCEPTANCE'))).toBe(true);
+    expect(lines.some((l) => l.startsWith('2. ACCURACY'))).toBe(true);
+    expect(lines.some((l) => l.startsWith('3. ACHIEVEMENT'))).toBe(true);
+  });
+
+  it('does not end with trailing whitespace', () => {
+    const state = { veryImportant: [v1], important: [], notImportant: [] };
+    const text = buildPlainText(state);
+    expect(text).toBe(text.trimEnd());
   });
 });
 

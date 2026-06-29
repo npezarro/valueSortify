@@ -130,6 +130,48 @@ describe('ResultsPhase', () => {
     expect(csvItem).toHaveAccessibleName(/Spreadsheet/);
   });
 
+  // ── Copy as text ──
+
+  it('copies a plain-text summary to the clipboard on Copy as text click', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.click(screen.getByRole('menuitem', { name: /Copy as text/ }));
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const text = writeText.mock.calls[0][0];
+    expect(text).toContain('My Personal Values');
+    expect(text).toContain('Very Important');
+    expect(text).toContain('1. COURAGE');
+    expect(text).toContain('WISDOM');
+  });
+
+  it('shows a confirmation after copying to clipboard', async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    });
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.click(screen.getByRole('menuitem', { name: /Copy as text/ }));
+    expect(await screen.findByText('Copied to clipboard!')).toBeInTheDocument();
+  });
+
+  it('shows an error when the clipboard write fails', async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) },
+      configurable: true,
+    });
+    render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /Export/ }));
+    await user.click(screen.getByRole('menuitem', { name: /Copy as text/ }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Could not copy/);
+    expect(screen.queryByText('Copied to clipboard!')).not.toBeInTheDocument();
+  });
+
   // ── Export menu keyboard navigation (WCAG 2.1.1) ──
 
   it('focuses first menu item when export dropdown opens', async () => {
@@ -152,9 +194,9 @@ describe('ResultsPhase', () => {
     const user = userEvent.setup();
     render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
     await user.click(screen.getByRole('button', { name: /Export/ }));
-    // Navigate to last item (JSON is 4th, so 3 ArrowDown from CSV)
-    await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
-    expect(document.activeElement).toHaveTextContent('Export as JSON');
+    // Navigate to last item (Copy as text is 5th, so 4 ArrowDown from CSV)
+    await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}');
+    expect(document.activeElement).toHaveTextContent('Copy as text');
     // Wrap around
     await user.keyboard('{ArrowDown}');
     expect(document.activeElement).toHaveTextContent('Export as CSV');
@@ -166,7 +208,7 @@ describe('ResultsPhase', () => {
     await user.click(screen.getByRole('button', { name: /Export/ }));
     // From first item, ArrowUp wraps to last
     await user.keyboard('{ArrowUp}');
-    expect(document.activeElement).toHaveTextContent('Export as JSON');
+    expect(document.activeElement).toHaveTextContent('Copy as text');
   });
 
   it('Home key focuses first menu item', async () => {
@@ -184,7 +226,7 @@ describe('ResultsPhase', () => {
     render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
     await user.click(screen.getByRole('button', { name: /Export/ }));
     await user.keyboard('{End}');
-    expect(document.activeElement).toHaveTextContent('Export as JSON');
+    expect(document.activeElement).toHaveTextContent('Copy as text');
   });
 
   it('Escape closes the export menu and returns focus to trigger', async () => {
