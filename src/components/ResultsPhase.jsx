@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
 import { ResetConfirmModal } from './ResetConfirmModal';
-import { buildCSV, buildJSONExport, buildImageBlob } from '../lib/export';
+import { buildCSV, buildJSONExport, buildImageBlob, buildPlainText } from '../lib/export';
 import { CATEGORY_COLORS } from '../lib/colors';
 
 function ResultGroup({ title, color, borderColor, bgColor, textColor, values }) {
@@ -36,6 +36,7 @@ export function ResultsPhase({ state, save, reset }) {
   const [showExport, setShowExport] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [exportError, setExportError] = useState(null);
+  const [copied, setCopied] = useState(false);
   const exportRef = useRef(null);
   const exportTriggerRef = useRef(null);
   const menuItemsRef = useRef([]);
@@ -99,6 +100,13 @@ export function ResultsPhase({ state, save, reset }) {
       document.removeEventListener('mousedown', handleClick);
     };
   }, [showExport]);
+
+  // Auto-clear the "Copied!" confirmation after a short delay.
+  useEffect(() => {
+    if (!copied) return undefined;
+    const t = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(t);
+  }, [copied]);
 
   const totalRanked =
     state.veryImportant.length + state.important.length + state.notImportant.length;
@@ -166,6 +174,21 @@ export function ResultsPhase({ state, save, reset }) {
     }
   };
 
+  const copyText = async () => {
+    try {
+      setExportError(null);
+      const text = buildPlainText(state);
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard unavailable');
+      }
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+      setExportError('Could not copy to clipboard. Please try another export option.');
+    }
+  };
+
   const download = (blob, filename) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -176,11 +199,13 @@ export function ResultsPhase({ state, save, reset }) {
   };
 
   // Order is significant: menuItemsRef indices and keyboard nav tests rely on it.
+  // Append new options at the end so existing indices stay stable.
   const exportOptions = [
     { label: 'Export as CSV', description: 'Spreadsheet (Excel, Sheets)', handler: exportCSV },
     { label: 'Export as PDF', description: 'Formatted, printable document', handler: exportPDF },
     { label: 'Export as Image', description: 'Shareable PNG snapshot', handler: exportImage },
     { label: 'Export as JSON', description: 'Raw data for backup', handler: exportJSON },
+    { label: 'Copy as text', description: 'Plain list for notes or email', handler: copyText },
   ];
 
   return (
@@ -270,6 +295,9 @@ export function ResultsPhase({ state, save, reset }) {
 
         {exportError && (
           <p className="text-sm text-destructive text-center mt-3 font-body" role="alert">{exportError}</p>
+        )}
+        {copied && (
+          <p className="text-sm text-moss text-center mt-3 font-body" role="status">Copied to clipboard!</p>
         )}
       </div>
 
