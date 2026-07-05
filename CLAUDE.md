@@ -47,7 +47,8 @@ GitHub Actions (`.github/workflows/ci.yml`) — Node 22, npm ci, lint, test, bui
 - **DOMPurify:** Added after PostCSS/XSS audit (April 2026). Any new feature that renders user-supplied or externally sourced strings must sanitize through DOMPurify.
 - **localStorage key:** `valuesortify-session`. If the schema changes, bump the key or add a migration in `useLocalStorage.js` — old sessions will break silently otherwise.
 - **Session normalization:** `normalizeState()` in `useLocalStorage.js` coerces stored session data on load — missing category arrays default to `[]`, non-integer phase defaults to `1`, non-object values fall back to `DEFAULT_STATE`. When adding new schema fields, update `normalizeState()` to handle them; otherwise new fields will be silently dropped on load.
-- **Export menu option order:** The `exportOptions` array in `ResultsPhase.jsx` (CSV, PDF, Image, JSON) is order-significant — `menuItemsRef` indices and keyboard navigation tests rely on it. Reordering breaks tests.
+- **Export menu option order:** The `exportOptions` array in `ResultsPhase.jsx` (CSV, PDF, Image, JSON, Copy as text) is order-significant — `menuItemsRef` indices and keyboard navigation tests rely on it. Reordering breaks tests. Append new options at the END to keep existing indices stable; note that any "last item" / wrap-around keyboard-nav tests assert the final entry, so adding an option means updating those.
+- **Copy as text:** Uses `navigator.clipboard.writeText` (async) guarded by a `navigator.clipboard?.writeText` check; on failure it surfaces `exportError`, on success a transient `role="status"` "Copied to clipboard!" message that auto-clears after 2s. Plain-text builder is `buildPlainText(state)` in `lib/export.js` (markdown-style list, omits empty categories).
 
 ## Cross-Cutting Rules (added 2026-06-27)
 

@@ -17,6 +17,26 @@ export function buildCSV(state) {
 }
 
 /**
+ * Build a plain-text (markdown-style) summary of the ranked hierarchy,
+ * suitable for pasting into notes or email. Empty categories are omitted.
+ */
+export function buildPlainText(state) {
+  const lines = ['My Personal Values', ''];
+  const addCategory = (values, category) => {
+    if (values.length === 0) return;
+    lines.push(category);
+    values.forEach((v, i) => {
+      lines.push(`${i + 1}. ${v.name} - ${v.description}`);
+    });
+    lines.push('');
+  };
+  addCategory(state.veryImportant, 'Very Important');
+  addCategory(state.important, 'Important');
+  addCategory(state.notImportant, 'Not Important');
+  return lines.join('\n').trimEnd();
+}
+
+/**
  * Build JSON export object from categorized values.
  */
 export function buildJSONExport(state, timestamp) {
