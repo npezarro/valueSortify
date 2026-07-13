@@ -239,4 +239,36 @@ describe('ResultsPhase', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     expect(document.activeElement).toBe(trigger);
   });
+
+  describe('empty state (nothing ranked)', () => {
+    const emptyState = { veryImportant: [], important: [], notImportant: [] };
+
+    it('shows a "Nothing ranked yet" message when no values are ranked', () => {
+      render(<ResultsPhase state={emptyState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText('Nothing ranked yet')).toBeInTheDocument();
+    });
+
+    it('does not render the "all your values ranked" intro when empty', () => {
+      render(<ResultsPhase state={emptyState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.queryByText(/Below are all your values ranked/)).not.toBeInTheDocument();
+    });
+
+    it('does not offer an Export button when there is nothing to export', () => {
+      render(<ResultsPhase state={emptyState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.queryByRole('button', { name: /Export/ })).not.toBeInTheDocument();
+    });
+
+    it('offers a Start Sorting action that navigates to phase 1', async () => {
+      const user = userEvent.setup();
+      const save = vi.fn();
+      render(<ResultsPhase state={emptyState} save={save} reset={vi.fn()} />);
+      await user.click(screen.getByRole('button', { name: /Start Sorting/ }));
+      expect(save).toHaveBeenCalledWith({ phase: 1 });
+    });
+
+    it('still renders the results heading', () => {
+      render(<ResultsPhase state={emptyState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText('Your Personal Values Hierarchy')).toBeInTheDocument();
+    });
+  });
 });

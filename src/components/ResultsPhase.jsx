@@ -215,89 +215,109 @@ export function ResultsPhase({ state, save, reset }) {
           <Trophy className="text-ember" size={24} aria-hidden="true" />
           Your Personal Values Hierarchy
         </h2>
-        <p className="text-ink/50 font-body mb-6">
-          Below are all your values ranked from most important to least important.
-        </p>
-
-        <div className="space-y-6">
-          <ResultGroup
-            title="Very Important Values"
-            values={state.veryImportant}
-            color="bg-ember"
-            borderColor="border-ember/20"
-            bgColor="bg-ember/5"
-            textColor="text-ember"
-          />
-          <ResultGroup
-            title="Important Values"
-            values={state.important}
-            color="bg-moss"
-            borderColor="border-moss/20"
-            bgColor="bg-moss/5"
-            textColor="text-moss"
-          />
-          <ResultGroup
-            title="Not Important Values"
-            values={state.notImportant}
-            color="bg-sky"
-            borderColor="border-sky/30"
-            bgColor="bg-sky/10"
-            textColor="text-ink/60"
-          />
-        </div>
-
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <button
-            onClick={() => save({ phase: 2 })}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
-          >
-            <ArrowLeft size={16} aria-hidden="true" />
-            Back to Ranking
-          </button>
-          <button
-            onClick={() => setShowResetConfirm(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
-          >
-            <RotateCcw size={16} aria-hidden="true" />
-            Start Over
-          </button>
-          <div className="relative" ref={exportRef}>
+        {totalRanked === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-lg font-display font-semibold text-ink/70 mb-2">
+              Nothing ranked yet
+            </p>
+            <p className="text-ink/50 font-body mb-6 max-w-md mx-auto">
+              You haven&apos;t sorted any values into categories. Head back to start sorting, and your ranked hierarchy will appear here.
+            </p>
             <button
-              ref={exportTriggerRef}
-              onClick={() => setShowExport(!showExport)}
-              aria-expanded={showExport}
-              aria-haspopup="true"
+              onClick={() => save({ phase: 1 })}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ember text-white hover:bg-ember/80 shadow-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
             >
-              <Download size={16} aria-hidden="true" />
-              Export
-              <ChevronDown size={14} aria-hidden="true" />
+              <ArrowLeft size={16} aria-hidden="true" />
+              Start Sorting
             </button>
-            {showExport && (
-              <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
-                {exportOptions.map((opt, i) => (
-                  <button
-                    key={opt.label}
-                    ref={(el) => setMenuItemRef(el, i)}
-                    onClick={() => { opt.handler(); setShowExport(false); }}
-                    role="menuitem"
-                    tabIndex={-1}
-                    className="w-full text-left px-4 py-2 font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
-                  >
-                    <span className="block text-sm">{opt.label}</span>
-                    <span className="block text-xs text-ink/40">{opt.description}</span>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
-        </div>
+        ) : (
+          <>
+            <p className="text-ink/50 font-body mb-6">
+              Below are all your values ranked from most important to least important.
+            </p>
 
-        {exportError && (
-          <p className="text-sm text-destructive text-center mt-3 font-body" role="alert">{exportError}</p>
-        )}
-        {copied && (
-          <p className="text-sm text-moss text-center mt-3 font-body" role="status">Copied to clipboard!</p>
+            <div className="space-y-6">
+              <ResultGroup
+                title="Very Important Values"
+                values={state.veryImportant}
+                color="bg-ember"
+                borderColor="border-ember/20"
+                bgColor="bg-ember/5"
+                textColor="text-ember"
+              />
+              <ResultGroup
+                title="Important Values"
+                values={state.important}
+                color="bg-moss"
+                borderColor="border-moss/20"
+                bgColor="bg-moss/5"
+                textColor="text-moss"
+              />
+              <ResultGroup
+                title="Not Important Values"
+                values={state.notImportant}
+                color="bg-sky"
+                borderColor="border-sky/30"
+                bgColor="bg-sky/10"
+                textColor="text-ink/60"
+              />
+            </div>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => save({ phase: 2 })}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
+              >
+                <ArrowLeft size={16} aria-hidden="true" />
+                Back to Ranking
+              </button>
+              <button
+                onClick={() => setShowResetConfirm(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"
+              >
+                <RotateCcw size={16} aria-hidden="true" />
+                Start Over
+              </button>
+              <div className="relative" ref={exportRef}>
+                <button
+                  ref={exportTriggerRef}
+                  onClick={() => setShowExport(!showExport)}
+                  aria-expanded={showExport}
+                  aria-haspopup="true"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm font-body bg-ember text-white hover:bg-ember/80 shadow-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/40 focus-visible:ring-offset-2"
+                >
+                  <Download size={16} aria-hidden="true" />
+                  Export
+                  <ChevronDown size={14} aria-hidden="true" />
+                </button>
+                {showExport && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-sm border border-black/5 rounded-2xl shadow-card z-10 py-1" role="menu" aria-label="Export options">
+                    {exportOptions.map((opt, i) => (
+                      <button
+                        key={opt.label}
+                        ref={(el) => setMenuItemRef(el, i)}
+                        onClick={() => { opt.handler(); setShowExport(false); }}
+                        role="menuitem"
+                        tabIndex={-1}
+                        className="w-full text-left px-4 py-2 font-body text-ink/70 hover:bg-sand/50 focus-visible:bg-sand/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ember/30"
+                      >
+                        <span className="block text-sm">{opt.label}</span>
+                        <span className="block text-xs text-ink/40">{opt.description}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {exportError && (
+              <p className="text-sm text-destructive text-center mt-3 font-body" role="alert">{exportError}</p>
+            )}
+            {copied && (
+              <p className="text-sm text-moss text-center mt-3 font-body" role="status">Copied to clipboard!</p>
+            )}
+          </>
         )}
       </div>
 
