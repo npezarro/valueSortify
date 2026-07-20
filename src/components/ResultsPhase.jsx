@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy } from 'lucide-react';
+import { ArrowLeft, Download, ChevronDown, RotateCcw, Trophy, Star } from 'lucide-react';
 import { ResetConfirmModal } from './ResetConfirmModal';
 import { buildCSV, buildJSONExport, buildImageBlob, buildPlainText } from '../lib/export';
 import { CATEGORY_COLORS } from '../lib/colors';
@@ -110,6 +110,12 @@ export function ResultsPhase({ state, save, reset }) {
 
   const totalRanked =
     state.veryImportant.length + state.important.length + state.notImportant.length;
+
+  // The single highest-priority value the user ranked, for an at-a-glance takeaway.
+  // Falls back through the priority order so it is always defined when totalRanked > 0
+  // (e.g. a user who sorted only into Important / Not Important still gets a top value).
+  const topValue =
+    state.veryImportant[0] || state.important[0] || state.notImportant[0];
 
   const exportJSON = () => {
     const data = buildJSONExport(state, new Date().toISOString());
@@ -233,6 +239,21 @@ export function ResultsPhase({ state, save, reset }) {
           </div>
         ) : (
           <>
+            {topValue && (
+              <div className="mb-6 flex flex-col gap-2 rounded-2xl border border-ember/20 bg-ember/5 px-4 py-4 sm:flex-row sm:items-center sm:gap-4 md:px-6">
+                <span className="inline-flex items-center gap-2 text-ember shrink-0">
+                  <Star size={20} aria-hidden="true" fill="currentColor" />
+                  <span className="text-xs font-body font-semibold uppercase tracking-wide opacity-80">
+                    Your top value
+                  </span>
+                </span>
+                <span className="font-display text-xl font-bold text-ink">{topValue.name}</span>
+                <span className="font-body text-sm text-ink/50 sm:ml-auto">
+                  {totalRanked} {totalRanked === 1 ? 'value' : 'values'} ranked
+                </span>
+              </div>
+            )}
+
             <p className="text-ink/50 font-body mb-6">
               Below are all your values ranked from most important to least important.
             </p>

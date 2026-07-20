@@ -32,7 +32,7 @@ GitHub Actions (`.github/workflows/ci.yml`) — Node 22, npm ci, lint, test, bui
   - `ValueCard.jsx` — Individual card with sort buttons
 - `RankingPhase.jsx` — Phase 2 drag-to-reorder within categories; keyboard reorder supported
   - `DraggableCard.jsx` — Reorderable card with drag handle
-- `ResultsPhase.jsx` — Phase 3 display + export (PDF / CSV / JSON)
+- `ResultsPhase.jsx` — Phase 3 display + summary header + export (PDF / CSV / JSON)
 - `hooks/useLocalStorage.js` — Persistence hook
 
 ## Key Behaviors
@@ -50,6 +50,7 @@ GitHub Actions (`.github/workflows/ci.yml`) — Node 22, npm ci, lint, test, bui
 - **Export menu option order:** The `exportOptions` array in `ResultsPhase.jsx` (CSV, PDF, Image, JSON, Copy as text) is order-significant — `menuItemsRef` indices and keyboard navigation tests rely on it. Reordering breaks tests. Append new options at the END to keep existing indices stable; note that any "last item" / wrap-around keyboard-nav tests assert the final entry, so adding an option means updating those.
 - **Empty results guard:** `ResultsPhase` branches on `totalRanked === 0`. When nothing is ranked (e.g. a restored/normalized session with empty category arrays, or navigating back to phase 3 with nothing sorted), it renders a "Nothing ranked yet" empty state with a "Start Sorting" button (`save({ phase: 1 })`) instead of the ranked-hierarchy intro, the (all-empty) result groups, and the Export menu. This prevents a broken-looking results screen and an Export that downloads empty files. Both paths keep the same heading; regression tests live under `describe('empty state ...')` in `ResultsPhase.test.jsx`.
 - **Copy as text:** Uses `navigator.clipboard.writeText` (async) guarded by a `navigator.clipboard?.writeText` check; on failure it surfaces `exportError`, on success a transient `role="status"` "Copied to clipboard!" message that auto-clears after 2s. Plain-text builder is `buildPlainText(state)` in `lib/export.js` (markdown-style list, omits empty categories).
+- **Results summary header:** When `totalRanked > 0`, `ResultsPhase` renders an at-a-glance summary callout ("Your top value" + total ranked count) above the intro paragraph and the ranked groups. `topValue = state.veryImportant[0] || state.important[0] || state.notImportant[0]`, so it falls back through the priority order and is always defined in the non-empty branch (a user who sorted only into Important/Not Important still gets a top value). It is NOT rendered in the empty-state branch. **Test gotcha:** the #1 value now appears TWICE in the DOM (summary callout + ranked list), so any test that counts occurrences of the top value with `getAllByText` must expect 2, not 1 (see the `renders all values` and `summary header` tests in `ResultsPhase.test.jsx`).
 
 ## Cross-Cutting Rules (added 2026-06-27)
 

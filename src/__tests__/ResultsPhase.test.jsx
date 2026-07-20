@@ -35,7 +35,9 @@ describe('ResultsPhase', () => {
 
   it('renders all values', () => {
     render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
-    expect(screen.getAllByText('COURAGE')).toHaveLength(1);
+    // COURAGE is the #1 value, so it appears twice: once in the summary header
+    // top-value callout and once in the ranked list below.
+    expect(screen.getAllByText('COURAGE')).toHaveLength(2);
     expect(screen.getAllByText('LOVE')).toHaveLength(1);
     expect(screen.getAllByText('WISDOM')).toHaveLength(1);
     expect(screen.getAllByText('FAME')).toHaveLength(1);
@@ -238,6 +240,50 @@ describe('ResultsPhase', () => {
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     expect(document.activeElement).toBe(trigger);
+  });
+
+  // ── Results summary header (top-value callout) ──
+
+  describe('summary header', () => {
+    it('shows a "Your top value" label above the hierarchy', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText('Your top value')).toBeInTheDocument();
+    });
+
+    it('highlights the #1 Very Important value as the top value', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      // COURAGE (veryImportant[0]) is surfaced in the summary in addition to the list.
+      expect(screen.getAllByText('COURAGE')).toHaveLength(2);
+    });
+
+    it('shows the total ranked count', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText(/4 values ranked/)).toBeInTheDocument();
+    });
+
+    it('uses singular wording when only one value is ranked', () => {
+      const state = { veryImportant: [makeValue(1, 'COURAGE')], important: [], notImportant: [] };
+      render(<ResultsPhase state={state} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText(/1 value ranked/)).toBeInTheDocument();
+    });
+
+    it('falls back to the highest-priority ranked value when Very Important is empty', () => {
+      const state = {
+        veryImportant: [],
+        important: [makeValue(3, 'WISDOM')],
+        notImportant: [makeValue(4, 'FAME')],
+      };
+      render(<ResultsPhase state={state} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.getByText('Your top value')).toBeInTheDocument();
+      // WISDOM (important[0]) becomes the top value: summary + list = 2 occurrences.
+      expect(screen.getAllByText('WISDOM')).toHaveLength(2);
+    });
+
+    it('does not render the summary header when nothing is ranked', () => {
+      const state = { veryImportant: [], important: [], notImportant: [] };
+      render(<ResultsPhase state={state} save={vi.fn()} reset={vi.fn()} />);
+      expect(screen.queryByText('Your top value')).not.toBeInTheDocument();
+    });
   });
 
   describe('empty state (nothing ranked)', () => {
