@@ -63,3 +63,16 @@ Synced from `~/repos/agentGuidance/guidance/testing.md` for the testing/CI conce
 - **Test glob quoting on GitHub Actions:** Single-quoted globs like `'src/**/*.test.js'` do NOT expand on GHA (`globstar` is off by default). Use a flat glob or let Vitest find tests via its config (the current `npm run test` → `vitest run` relies on config discovery — keep it).
 - **Mock at boundaries** (localStorage, DOM APIs, timers, jsPDF/export libs) — not the unit under test. Reset mocks between tests with `beforeEach(() => vi.clearAllMocks())`.
 - **Write a regression test for every bug fix** — one that fails without the fix and passes with it. Co-locate new tests in `src/__tests__/` following the existing `*.test.js`/`*.test.jsx` convention.
+
+## Cross-Cutting Rules — Deployment (added 2026-08-01)
+
+Synced from `~/repos/agentGuidance/guidance/deployment.md`. This repo has a live deploy target (the `dist/` bundle published to pezant-tools — see the Deploy section above), but the timing and verification rules that protect that deploy were not recorded here. Testing/CI rules are already covered in the section above and are not repeated.
+
+### Deploy & Verify (deployment.md)
+
+- **Deploy after every change to a deployed app.** If you commit a change here, publish it in the same session — do not accumulate undeployed commits. Vite emits content-hashed asset filenames on every build, so a published `index.html` from an older build references chunk names that no longer exist and the app renders blank or half-dead. If you deliberately batch and skip the deploy, record the pending deploy in `context.md` so the next session knows.
+- **Pre-deploy checklist:** changes committed and pushed via PR, `npm run build` succeeds, `npm run test` passes, `npm run lint` is clean, `package-lock.json` committed, and `context.md` updated with the deployment intent.
+- **Verify the bytes, not the status code.** "It built clean" is not "it works," and a 200 only proves that *something* is at the URL — a CDN will serve a stale cached object of the right size while the status check passes. After publishing, fetch the deployed `index.html` cache-busted and assert it references the hashed filenames this build actually produced (compare against `dist/assets/`), then request one of those hashed assets and assert a *final* 200 — follow redirects, because a 301 to a path that 404s looks like success until you follow it.
+- **The static host is CDN-fronted with a short edge cache, so a post-deploy `curl` can validate the OLD deploy** and report success. Check the cache-status response header (want a miss/bypass/expired, not a hit) or bypass the edge before believing any post-deploy check.
+- **Exercise a real user path before declaring done.** Load the deployed app and complete a Sort → Rank → Results pass rather than only curling the document root: the HTML shell can return 200 while a stale or missing chunk kills every interaction. Never hand it to the user with "done, try it out" unverified.
+- **If any post-deploy check fails, do not move on.** Diagnose and fix before calling the deploy complete, then update `context.md` with the final deployment status and anything observed.
