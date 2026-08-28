@@ -334,5 +334,13 @@ describe('ResultsPhase', () => {
       const groupHeading = screen.getByText('Very Important Values');
       expect(groupHeading.closest('.print\\:hidden')).toBeNull();
     });
+
+    it('renders a print-only provenance line (app name + date) hidden on screen', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      // Restores what the sheet is / when it was made once the app header is print-hidden.
+      const provenance = screen.getByText(/Personal Values Card Sort/);
+      expect(provenance.className).toContain('hidden');
+      expect(provenance.className).toContain('print:block');
+    });
   });
 });

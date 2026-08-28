@@ -217,6 +217,15 @@ export function ResultsPhase({ state, save, reset }) {
   return (
     <div>
       <div className="bg-card backdrop-blur-sm border border-black/5 rounded-2xl p-6 mb-8 shadow-card">
+        {/*
+          Print-only provenance line. The app header/name is print:hidden, so on
+          paper this restores what the sheet is and when it was made — a clear
+          signal the printout is intentional (not a broken screenshot) without
+          adding any on-screen chrome.
+        */}
+        <div className="hidden print:block mb-3 text-xs font-body text-ink/50">
+          Personal Values Card Sort &middot; Generated {new Date().toLocaleDateString()}
+        </div>
         <h2 className="text-2xl font-display font-bold mb-2 flex items-center gap-3 text-ink">
           <Trophy className="text-ember" size={24} aria-hidden="true" />
           Your Personal Values Hierarchy
