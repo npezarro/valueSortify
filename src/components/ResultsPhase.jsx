@@ -285,7 +285,7 @@ export function ResultsPhase({ state, save, reset }) {
               />
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="mt-8 flex flex-wrap justify-center gap-3 print:hidden">
               <button
                 onClick={() => save({ phase: 2 })}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm font-body bg-white border border-black/10 text-ink/70 hover:bg-sand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20"

@@ -31,3 +31,50 @@ body {
     radial-gradient(ellipse at 80% 100%, theme('colors.moss / 6%') 0%, transparent 60%),
     linear-gradient(180deg, theme('colors.sand') 0%, #ede8dd 100%);
 }
+
+/*
+ * Print: turn the Results screen into a clean, ink-light handout of just the
+ * ranked hierarchy. App chrome (header, phase instructions, progress bar,
+ * action buttons) is marked `print:hidden` in the markup; here we flatten the
+ * on-screen gradient wash and glass-morphism so cards read as crisp panels,
+ * keep the category accent colors the browser would otherwise strip, and stop
+ * a value group from being split across a page break.
+ */
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  #root {
+    min-height: 0 !important;
+    background: none !important;
+  }
+
+  /* Preserve the ember/moss/sky category accents (dots, tints, headings). */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Flatten glass-morphism: no blur or drop shadow on paper. */
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .shadow-card {
+    box-shadow: none !important;
+  }
+
+  /* Trim the on-screen outer padding/margin the results card carries. */
+  main {
+    padding: 0 !important;
+  }
+
+  /* Keep each value group (heading + list) together across pages. */
+  main h3,
+  main ol,
+  main li {
+    break-inside: avoid;
+  }
+}

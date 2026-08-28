@@ -317,4 +317,22 @@ describe('ResultsPhase', () => {
       expect(screen.getByText('Your Personal Values Hierarchy')).toBeInTheDocument();
     });
   });
+
+  describe('print layout', () => {
+    it('hides the Back / Start Over / Export action row from print output', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      // The three action buttons share one wrapping row; it must not print so the
+      // handout is just the ranked hierarchy (Ctrl+P clean-printout feature).
+      const actionRow = screen.getByRole('button', { name: /Back to Ranking/ }).parentElement;
+      expect(actionRow.className).toContain('print:hidden');
+      expect(actionRow).toContainElement(screen.getByRole('button', { name: /Export/ }));
+    });
+
+    it('keeps the ranked value groups in the printed output', () => {
+      render(<ResultsPhase state={defaultState} save={vi.fn()} reset={vi.fn()} />);
+      // Group headings and their lists carry no print:hidden marker, so they survive Ctrl+P.
+      const groupHeading = screen.getByText('Very Important Values');
+      expect(groupHeading.closest('.print\\:hidden')).toBeNull();
+    });
+  });
 });
