@@ -41,6 +41,7 @@ GitHub Actions (`.github/workflows/ci.yml`) — Node 22, npm ci, lint, test, bui
 - **Cross-category card movement:** Colored dot buttons in RankingPhase move cards between categories.
 - **Focus visible rings:** All interactive elements have explicit `:focus-visible` outlines (added April 2026 — no browser-default reliance).
 - **Reset/Start Over:** Available in all phases with confirmation dialog. Clears localStorage.
+- **Print layout (Ctrl+P) on Results:** `index.css` defines print-media rules and `print:hidden` utility classes used across `App.jsx`/`ResultsPhase.jsx` to hide screen-only chrome (header, phase instructions, progress bar, Back/Start Over/Export action row) when printing. `ResultsPhase` renders a print-only provenance line ("Personal Values Card Sort · Generated <date>") so a printed copy of the ranked hierarchy reads as an intentional handout. PR #152.
 
 ## Gotchas
 - **Category counter buttons in card mode:** `SortingPhase` toggles view mode. Counter buttons are rendered in both modes but must be `disabled` in card mode — clicking them does nothing (handler early-returns). Keyboard and screen reader users must not be able to reach non-interactive buttons. PR #139.
