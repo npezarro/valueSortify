@@ -51,8 +51,8 @@ export default function App() {
         Skip to content
       </a>
 
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-black/5">
+      {/* Header (screen chrome — omitted from print) */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-black/5 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div>
@@ -87,8 +87,8 @@ export default function App() {
 
       {/* Main */}
       <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 focus:outline-none">
-        {/* Phase instructions */}
-        <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-5 mb-6 shadow-card">
+        {/* Phase instructions (screen chrome — omitted from print) */}
+        <div className="bg-white/80 backdrop-blur-sm border border-black/5 rounded-2xl p-5 mb-6 shadow-card print:hidden">
           <div className="flex items-start gap-3">
             <info.Icon className="text-ember shrink-0 mt-0.5" size={20} aria-hidden="true" />
             <div>
@@ -114,8 +114,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Mobile progress */}
-        <div className="sm:hidden mb-4">
+        {/* Mobile progress (screen chrome — omitted from print) */}
+        <div className="sm:hidden mb-4 print:hidden">
           <div className="flex items-center gap-3">
             <span className="text-xs text-ink/50 font-body">
               Phase {phase}/3
