@@ -77,3 +77,10 @@ Synced from `~/repos/agentGuidance/guidance/deployment.md`. This repo has a live
 - **The static host is CDN-fronted with a short edge cache, so a post-deploy `curl` can validate the OLD deploy** and report success. Check the cache-status response header (want a miss/bypass/expired, not a hit) or bypass the edge before believing any post-deploy check.
 - **Exercise a real user path before declaring done.** Load the deployed app and complete a Sort → Rank → Results pass rather than only curling the document root: the HTML shell can return 200 while a stale or missing chunk kills every interaction. Never hand it to the user with "done, try it out" unverified.
 - **If any post-deploy check fails, do not move on.** Diagnose and fix before calling the deploy complete, then update `context.md` with the final deployment status and anything observed.
+
+## Cross-Cutting Rules: Visual Deploy Checks (added 2026-10-24)
+
+Synced from `~/repos/agentGuidance/guidance/deployment.md` (Post-Deploy Verification). The Deploy & Verify section above covers byte and user-path checks; this adds the visual comparison step that now applies to every deploy with a UI change.
+
+- **Screenshot before and after.** For any deploy that changes what the app looks like, run `~/repos/project-screenshots/bin/shoot.sh valuesortify --before <urls>` before publishing `dist/`, then `shoot.sh valuesortify --commit <sha> --note "<what changed>" <urls>` after it. This archives before/after pairs to the private screenshots repo and posts them side by side for comparison.
+- **Read the after shots yourself.** A blank page, unstyled page, or error screen in a shot is a failed deploy, even if the HTML returned 200. Skip this step only for changes with no UI (tests, lint, docs).
